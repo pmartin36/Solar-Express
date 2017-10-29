@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour {
 
-	public EnemyShip enemyShipPrefab;
+	public LaserShip enemyShipPrefab;
 	public Meteor meteorPrefab;
+	public OrbitingEnemy orbiterPrefab;
+	public EMP EMPPrefab;
 
 	// Use this for initialization
 	void Start () {
@@ -19,15 +21,27 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	IEnumerator SpawnLevel() {
-		EnemyShip es = Instantiate(enemyShipPrefab);
-		es.Init(new Vector2(1, -1) * 2, startRotation: 135, numberOfShots: 5, rotationBetweenShots: 0, timeBtwShots: 2f, color: Colors.Green);
+		Meteor m = Instantiate(meteorPrefab, new Vector2(-1, 1) * 5, Quaternion.identity);
+		m.Init(Colors.Blue, 90, 5, 0.5f);
 
 		yield return new WaitForSeconds(1f);
 
-		EnemyShip es2 = Instantiate(enemyShipPrefab);
-		es2.Init(new Vector2(1,0) * 2, startRotation: 180, numberOfShots: 5, rotationBetweenShots: 0, timeBtwShots: 2f, color: Colors.Blue);
+		EMP e = Instantiate(EMPPrefab, new Vector2(1.5f, 0f), Quaternion.identity);
+		e.Init(Colors.Green);
 
-		Meteor m = Instantiate(meteorPrefab, new Vector2(-1,1) * 5, Quaternion.identity);
-		m.Init(Colors.Red, 90, 5, 0.5f);
+		OrbitingEnemy o = Instantiate(orbiterPrefab, new Vector2(-5f, -2f), Quaternion.identity);
+		o.Init(Colors.Red);
+
+		yield return new WaitForSeconds(2f);
+
+		LaserShip es = Instantiate(enemyShipPrefab);
+		es.Init(4, startRotation: 135, numberOfShots: 10, rotationBetweenShots: 0, timeBtwShots: 4f, color: Colors.Red);
+
+		yield return new WaitForSeconds(1f);
+
+		LaserShip es2 = Instantiate(enemyShipPrefab);
+		es2.Init(2, startRotation: 180, numberOfShots: 5, rotationBetweenShots: 0, timeBtwShots: 2f, color: Colors.Green);
+
+		
 	}
 }

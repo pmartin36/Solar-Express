@@ -7,6 +7,10 @@ TagManager:
   - Core
   - Shield
   - Damager
+  - Gun
+  - Laser Ship Engine
+  - EMPTextCanvas
+  - EMP Explosion
   layers:
   - Default
   - TransparentFX
@@ -16,7 +20,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Shield
   - 
   - 
   - 
@@ -41,8 +45,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 1518144013
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: EMPText
+    uniqueID: 2874623217
     locked: 0
   - name: Effects
     uniqueID: 1600312751

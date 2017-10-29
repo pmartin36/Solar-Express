@@ -118,8 +118,9 @@ Shader "Sprites/Core"
 				float3 highlight = intensity *
 					((regions.r * normalize(float3(IN.color_uv, dist * 2))) +((1 - regions.r) * float3(dist, 0, 0)));
 
-				c.a *= regions;
+				
 				c.rgb += highlight;
+				c.rgb *= regions;
 
 				return c;
 			}

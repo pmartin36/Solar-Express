@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
 public class Shield : MonoBehaviour {
 
 	public Colors GameColor;
 	private int ringIndex = 0;
+
+	private bool Disabled;
 
 	List<Color> ringColor;
 	List<Vector4> ringInfo;
 	List<Coroutine> ringCoroutines;
 
 	SpriteRenderer spriteRenderer;
+	PolygonCollider2D polycollider;
 
 	// Use this for initialization
 	void Start () {
@@ -22,6 +23,7 @@ public class Shield : MonoBehaviour {
 		ringCoroutines = new List<Coroutine>(2);
 
 		spriteRenderer = GetComponent<SpriteRenderer>();
+		polycollider = GetComponent<PolygonCollider2D>();
 	}
 	
 	// Update is called once per frame
@@ -47,6 +49,9 @@ public class Shield : MonoBehaviour {
 					animationDuration = 0.25f;
 					m.HitShield();
 				}
+				else if(d is OrbiterBullet) {
+					return;
+				}
 
 				int index = 0;
 				if (ringCoroutines.Count >= 2) {
@@ -67,6 +72,34 @@ public class Shield : MonoBehaviour {
 
 			}
 		}
+		else if(collision.tag == "EMP Explosion") {
+			EMPExplosion s = collision.GetComponent<EMPExplosion>();
+			if (s.GameColor == GameColor) {
+				//disable shield for time
+				StartCoroutine(Disable());
+			}
+			else {
+				
+			}
+		}
+	}
+
+	void ToggleDisabled(bool disabled) {
+		Disabled = disabled;
+
+		Color c = spriteRenderer.color;
+		c.a = disabled ? 0.0f : 1f;
+		spriteRenderer.color = c;
+
+		polycollider.enabled = !disabled;
+	}
+
+	IEnumerator Disable() {
+		ToggleDisabled(true);
+
+		yield return new WaitForSeconds(5f);
+
+		ToggleDisabled(false);
 	}
 
 	IEnumerator HitShield(Color c, int index, float animationDuration) {

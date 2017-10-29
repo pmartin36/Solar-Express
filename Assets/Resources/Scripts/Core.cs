@@ -45,8 +45,8 @@ public class Core : MonoBehaviour {
 	}
 
 	IEnumerator ShipHit(Vector3 direction) {
-		Vector3 position = transform.position + direction * transform.localScale.x;
-		GameObject hit = Instantiate(ShipHitPrefab, position, Quaternion.Euler(0,0,Utils.VectorToAngle(direction)+90));
+		Vector3 position = transform.position + 0.75f * direction * transform.localScale.x;
+		GameObject hit = Instantiate(ShipHitPrefab, position, Quaternion.Euler(0,0,Utils.VectorToAngle(direction)+90), this.transform);
 
 		var explosionps = hit.GetComponentsInChildren<ParticleSystem>();
 

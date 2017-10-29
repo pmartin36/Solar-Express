@@ -76,6 +76,9 @@
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
     </Reference>
+    <Reference Include="TextMeshPro-1.0.55.2017.1.0b12">
+      <HintPath>Assets\TextMesh Pro\Plugins\TextMeshPro-1.0.55.2017.1.0b12.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
@@ -127,14 +130,20 @@
     <Compile Include="Assets\Resources\Scripts\CameraController.cs" />
     <Compile Include="Assets\Resources\Scripts\Core.cs" />
     <Compile Include="Assets\Resources\Scripts\Damager.cs" />
-    <Compile Include="Assets\Resources\Scripts\EnemyShip.cs" />
+    <Compile Include="Assets\Resources\Scripts\EMP.cs" />
+    <Compile Include="Assets\Resources\Scripts\EMPExplosion.cs" />
     <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
     <Compile Include="Assets\Resources\Scripts\InputPackage.cs" />
+    <Compile Include="Assets\Resources\Scripts\LaserShip.cs" />
     <Compile Include="Assets\Resources\Scripts\LevelManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Meteor.cs" />
+    <Compile Include="Assets\Resources\Scripts\OrbiterBullet.cs" />
+    <Compile Include="Assets\Resources\Scripts\OrbiterBulletRing.cs" />
+    <Compile Include="Assets\Resources\Scripts\OrbitingEnemy.cs" />
     <Compile Include="Assets\Resources\Scripts\Shield.cs" />
     <Compile Include="Assets\Resources\Scripts\Ship.cs" />
     <Compile Include="Assets\Resources\Scripts\Singleton.cs" />
+    <Compile Include="Assets\Resources\Scripts\Spin.cs" />
     <Compile Include="Assets\Resources\Scripts\TestRotateAround.cs" />
     <Compile Include="Assets\Resources\Scripts\TouchController.cs" />
     <Compile Include="Assets\Resources\Scripts\Utils.cs" />
@@ -183,10 +192,37 @@
     <None Include="Assets\PostProcessing\Resources\Shaders\UberSecondPass.cginc" />
     <None Include="Assets\PostProcessing\Utilities\CustomMotionTexture\Shaders\CustomMotionVectorTexture.shader" />
     <None Include="Assets\Resources\Shaders\Bullet.shader" />
+    <None Include="Assets\Resources\Shaders\DistFromCenter.shader" />
     <None Include="Assets\Resources\Shaders\Shield.shader" />
+    <None Include="Assets\Resources\Shaders\Sprites-Bullet2.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-Core.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-Default.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-Diffuse.shader" />
+    <None Include="Assets\Resources\Shaders\Sprites-EMPBomb.shader" />
+    <None Include="Assets\Resources\Shaders\Sprites-EMPExplosion.shader" />
+    <None Include="Assets\Resources\Shaders\Sprites-EMPExplosionCenter.shader" />
+    <None Include="Assets\Resources\Shaders\Sprites-LaserShip.shader" />
+    <None Include="Assets\Resources\Shaders\Sprites-OrbitingBase.shader" />
+    <None Include="Assets\Resources\Shaders\Sprites-OrbitingGun.shader" />
+    <None Include="Assets\TextMesh Pro\Fonts\Anton OFL.txt" />
+    <None Include="Assets\TextMesh Pro\Fonts\Bangers - OFL.txt" />
+    <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
+    <None Include="Assets\TextMesh Pro\Fonts\Oswald-Bold - OFL.txt" />
+    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
