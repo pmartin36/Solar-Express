@@ -14,7 +14,6 @@ public class LaserShip : MonoBehaviour {
 	public Vector3 StartPosition { get; set; }
 	
 	public static Bullet bulletPrefab;
-	public static GameObject circlePrefab;
 
 	private SpriteRenderer spriteRenderer;
 	private Color shipColor;
@@ -42,8 +41,6 @@ public class LaserShip : MonoBehaviour {
 		spriteRenderer.material.SetFloat("_Cutoff", 0.99f);
 
 		bulletPrefab = bulletPrefab ?? Resources.Load<Bullet>("Prefabs/Bullet");
-		circlePrefab = circlePrefab ?? Resources.Load<GameObject>("Prefabs/Circle");
-		circlePrefab.transform.localScale = Vector3.one * 0.1f;
 
 		var pss = GetComponentsInChildren<ParticleSystem>();
 		EnginePS = pss.Single(g => g.tag == "Laser Ship Engine");
@@ -62,10 +59,11 @@ public class LaserShip : MonoBehaviour {
 		
 	}
 
-	private void Shoot() {
+	private Bullet SpawnBullet(float chargeTime) {
 		Vector3 direction = Utils.AngleToVector(StartRotation).normalized;
 		Bullet b = Instantiate(bulletPrefab, this.transform.position + 0.25f * direction, Quaternion.identity);
-		b.Init(this.GameColor, this.transform.position, transform.localRotation.eulerAngles.z, 4f);
+		b.Init(this, transform.localRotation.eulerAngles.z, 4f);
+		return b;
 	}
 
 	IEnumerator PerformActions() {
@@ -74,46 +72,42 @@ public class LaserShip : MonoBehaviour {
 		for(int i = 0; i < NumberOfShots; i++) {
 			float scale = 2f;
 			float startTime = Time.time;
+			float chargeTime = 3f;
 
-			GameObject g = Instantiate(circlePrefab, transform.position, Quaternion.identity);
-			Vector3 endPosition = transform.position + Direction / 2.75f;
+			Bullet b = SpawnBullet(chargeTime);
+			Vector3 endPosition = transform.position + Direction / 2.5f;
 
-			while (Time.time - startTime < TimeBetweenShots / scale + Time.deltaTime) {
-				float jTime = (Time.time - startTime) / TimeBetweenShots;
-
-				//transform.localRotation = Quaternion.Euler( 0, 0, Mathf.Lerp(startRotation, endRotation, jTime * scale) );
-
-				g.transform.position = Vector3.Lerp(transform.position, endPosition, jTime * scale);
-
+			//move bullet out
+			float moveOutTime = TimeBetweenShots * 0.7f;
+			while (Time.time - startTime < moveOutTime + Time.deltaTime) {
+				float jTime = (Time.time - startTime) / moveOutTime;
+				b.transform.position = Vector3.Lerp(transform.position, endPosition, jTime);
 				yield return new WaitForEndOfFrame();
 			}
+			yield return new WaitForSeconds(TimeBetweenShots * 0.3f);
 
+			b.StartCharging();
+
+			//start charging
 			foreach (ParticleSystem ps in FeedPS) {
 				var em = ps.emission;
 				em.enabled = true;
 			}
 
-			bool pson = true;
-
-			//charge
 			startTime = Time.time;
-			float chargeTime = 3f;
-			while (Time.time - startTime < chargeTime+ Time.deltaTime) {
-				float jTime = (Time.time - startTime) / chargeTime;
-				spriteRenderer.material.SetFloat("_Cutoff", Mathf.Lerp(0.99f, 0.01f, jTime));
-				if(jTime >= 0.7f && pson) {
-					pson = false;
-					foreach (ParticleSystem ps in FeedPS) {
-						var em = ps.emission;
-						em.enabled = false;
-					}
-				}
-				yield return new WaitForEndOfFrame();
+						
+			yield return new WaitForSeconds(chargeTime * 0.7f);
+
+			//stop charging particles
+			foreach (ParticleSystem ps in FeedPS) {
+				var em = ps.emission;
+				em.enabled = false;
 			}
 
-			Shoot();
+			yield return new WaitUntil(() => !b.Charging);
 
 			//discharge
+			/*
 			startTime = Time.time;
 			while (Time.time - startTime < 0.5f + Time.deltaTime) {
 				float jTime = (Time.time - startTime) / 0.1f;
@@ -121,7 +115,6 @@ public class LaserShip : MonoBehaviour {
 				yield return new WaitForEndOfFrame();
 			}			
 
-			/*
 			startTime = Time.time;
 			float startRotation = transform.localRotation.eulerAngles.z;
 			float endRotation = startRotation + RotationBetweenShots;
@@ -130,7 +123,7 @@ public class LaserShip : MonoBehaviour {
 				transform.localRotation = Quaternion.Euler( 0, 0, Mathf.Lerp(startRotation, endRotation, jTime * scale) );
 				yield return new WaitForEndOfFrame();
 			}
-			*/		
+			*/
 		}
 	}
 

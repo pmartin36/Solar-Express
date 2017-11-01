@@ -29,7 +29,7 @@ Shader "Sprites/EMPExplosion"
 		Cull Off
 		Lighting Off
 		ZWrite Off
-		Blend SrcAlpha OneMinusSrcAlpha
+		Blend SrcAlpha One
 
 		Pass
 		{

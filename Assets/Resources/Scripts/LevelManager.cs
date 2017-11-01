@@ -40,7 +40,7 @@ public class LevelManager : MonoBehaviour {
 		yield return new WaitForSeconds(1f);
 
 		LaserShip es2 = Instantiate(enemyShipPrefab);
-		es2.Init(2, startRotation: 180, numberOfShots: 5, rotationBetweenShots: 0, timeBtwShots: 2f, color: Colors.Green);
+		es2.Init(3, startRotation: 180, numberOfShots: 5, rotationBetweenShots: 0, timeBtwShots: 2f, color: Colors.Green);
 
 		
 	}

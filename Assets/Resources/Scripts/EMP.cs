@@ -20,6 +20,8 @@ public class EMP : MonoBehaviour {
 	public static Canvas EMPTextCanvas;
 	public static EMPExplosion explosionPrefab;
 
+	ParticleSystem ps;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -58,15 +60,20 @@ public class EMP : MonoBehaviour {
 		text.rectTransform.position = Vector3.zero;
 
 		text.text = TimeToDetonation.ToString();
-		text.color = color;
+		text.color = Color.clear;
 		text.fontMaterial.SetColor("_UnderlayColor", color);
 		text.fontMaterial.SetColor("_FaceColor", Color.black);
+
 
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		spriteRenderer.material.SetColor("_Color", color);
 		spriteRenderer.material.SetColor("_SecondaryColor", secondaryColor);
 
 		transform.localRotation = Quaternion.Euler(0,0,90);
+
+		ps = GetComponentInChildren<ParticleSystem>();
+		var main = ps.main;
+		main.startColor = Color.clear;
 
 		StartCoroutine(Action());
 
@@ -86,12 +93,25 @@ public class EMP : MonoBehaviour {
 
 	private IEnumerator Action() {
 		//spawn
+		float startTime = Time.time;
+		float spawnTime = 3f;
+		var main = ps.main;
+		while(Time.time - startTime < spawnTime + Time.deltaTime) {
+			float jTime = (Time.time - startTime) / spawnTime;
+			Color lerpcolor = Color.Lerp(Color.clear, Color.white, jTime);
+
+			main.startColor = lerpcolor;
+			text.color = lerpcolor;
+			spriteRenderer.material.SetFloat("_Cutoff", Mathf.Lerp(0.75f, 0, jTime));
+
+			yield return new WaitForEndOfFrame();
+		}
 
 		//countdown
 		int c = 0;
 		while( c < TimeToDetonation ) {
 			UpdateTimer(c);
-			float startTime = Time.time;
+			startTime = Time.time;
 			while( Time.time - startTime < 1f + Time.deltaTime) {
 				spriteRenderer.material.SetFloat("_Angle", Mathf.Lerp(c, c+1, Time.time - startTime) * 360 / TimeToDetonation);
 				yield return new WaitForEndOfFrame();

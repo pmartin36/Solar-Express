@@ -1,32 +1,47 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Bullet : Damager {
 
 	public Vector3 Movement { get; set; }
+	public LaserShip SpawningShip { get; set; }
+	public bool Charging { get; set; }
 
 	private SpriteRenderer spriteRenderer;
+	private ParticleSystem dust, sparkle;
 
 	public float ShieldAnimationTime;
 
 	// Use this for initialization
 	protected override void Start () {
 		Color c = Utils.GetColorFromGameColor(GameColor);
-
-		Color ahalf = new Color(c.r/2f,c.g/2f,c.b/2f);
 		
 		spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-		spriteRenderer.material.SetColor("_Color", ahalf);
+		spriteRenderer.color = c;
+		spriteRenderer.material.SetFloat("_Cutoff", 0.1f);
 
-		StartCoroutine(Fire());
+		ParticleSystem[] ps = GetComponentsInChildren<ParticleSystem>();
+
+		sparkle = ps.First( p => p.main.loop);
+		var em = sparkle.emission;
+		em.enabled = false;
+
+		var main = sparkle.main;
+		main.startColor = new ParticleSystem.MinMaxGradient(Color.white, c);
+
+		dust = ps.First(p => !p.main.loop);
 	}
 	
-	public void Init(Colors c, Vector3 position, float direction, float speed) {
-		GameColor = c;
+	public void Init(LaserShip ship, float direction, float speed) {
+		GameColor = ship.GameColor;
 		transform.localRotation = Quaternion.Euler(0,0,direction);
 
+		SpawningShip = ship;
+
 		Movement = Utils.AngleToVector(direction) * speed;
+		Charging = true;
 	}
 
 	public override void HitShield() {
@@ -48,26 +63,44 @@ public class Bullet : Damager {
 
 	// Update is called once per frame
 	protected override void Update () {
-		transform.position += Movement * Time.deltaTime;
+		if(!Charging)
+			transform.position += Movement * Time.deltaTime;
+	}
+
+	public void StartCharging() {
+		StartCoroutine(Fire());
 	}
 
 	IEnumerator Fire() {
+		//charge
+		var em = sparkle.emission;
+		em.enabled = true;
+
 		float startTime = Time.time;
-		float journeyTime = 0.75f;
-		while(Time.time - startTime < journeyTime) {
-			float jTime = (Time.time - startTime) / journeyTime;
-			transform.localScale = new Vector3( Mathf.Lerp(0.1f, 0.75f, jTime), 1f, 1f);
+		float ttime = 3f;
+		while (Time.time - startTime < ttime + Time.deltaTime) {
+			float jTime = (Time.time - startTime) / ttime;
+			spriteRenderer.material.SetFloat("_Cutoff", Mathf.Lerp(0.1f, 0.55f, jTime));
 			yield return new WaitForEndOfFrame();
 		}
+
+		Charging = false;
+		dust.Emit(20);
 	}
 
 	IEnumerator HitTarget(float duration) {
 		float startTime = Time.time;
-		GetComponent<PolygonCollider2D>().enabled = false;
+		GetComponent<CircleCollider2D>().enabled = false;
+		Movement = Vector2.zero;
 		while(Time.time - startTime < duration + Time.deltaTime) {
 			spriteRenderer.material.SetFloat("_XAlpha", (Time.time - startTime) / duration);
 			yield return new WaitForEndOfFrame();
 		}
+
+		//allow particles to disappear before destroying
+		spriteRenderer.enabled = false;
+		yield return new WaitForSeconds(1f);
+
 		Destroy(this.gameObject);
 	}
 }

@@ -3,9 +3,11 @@ Shader "Sprites/EMPBomb"
 	Properties
 	{
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
+		_AlphaCutoffTex("Alpha Cutoff Tex", 2D) = "white" {}
 		_Color("Tint", Color) = (1,1,1,1)
 		_SecondaryColor("Secondary Color", Color) = (1,1,1,1)
 		_Angle("Angle", Range(0,360)) = 0
+		_Cutoff("Alpha Cutoff", Range(0,0.99)) = 0
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
 	}
 
@@ -71,9 +73,10 @@ Shader "Sprites/EMPBomb"
 			}
 
 			sampler2D _MainTex;
-			sampler2D _AlphaTex;
+			sampler2D _AlphaCutoffTex;
 			float4 _SecondaryColor;
 			float _Angle;
+			float _Cutoff;
 
 			fixed4 SampleSpriteTexture (float2 uv)
 			{
@@ -94,7 +97,11 @@ Shader "Sprites/EMPBomb"
 			fixed4 frag(v2f IN) : SV_Target
 			{
 				fixed4 c = SampleSpriteTexture (IN.texcoord);
+				fixed4 alphaTex = tex2D(_AlphaCutoffTex, IN.texcoord/2);
+
+
 				float angle = VectorToAngle(IN.texcoord);
+				c.a *= ceil(alphaTex.r - _Cutoff);
 
 				if (angle < _Angle) {
 					c *= _Color;

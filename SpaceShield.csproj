@@ -143,7 +143,6 @@
     <Compile Include="Assets\Resources\Scripts\Shield.cs" />
     <Compile Include="Assets\Resources\Scripts\Ship.cs" />
     <Compile Include="Assets\Resources\Scripts\Singleton.cs" />
-    <Compile Include="Assets\Resources\Scripts\Spin.cs" />
     <Compile Include="Assets\Resources\Scripts\TestRotateAround.cs" />
     <Compile Include="Assets\Resources\Scripts\TouchController.cs" />
     <Compile Include="Assets\Resources\Scripts\Utils.cs" />

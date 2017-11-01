@@ -3,7 +3,8 @@ Shader "Sprites/Bullet2"
 	Properties
 	{
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-		_Color ("Tint", Color) = (1,1,1,1)
+		_Color("Tint", Color) = (1,1,1,1)
+		_Cutoff("Cutoff", Range(0,1)) = 0
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
 	}
 
@@ -70,6 +71,7 @@ Shader "Sprites/Bullet2"
 
 			sampler2D _MainTex;
 			sampler2D _AlphaTex;
+			float _Cutoff;
 
 			fixed4 SampleSpriteTexture (float2 uv)
 			{
@@ -80,6 +82,11 @@ Shader "Sprites/Bullet2"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
+				float dist = distance(float2(0.5, 0.5), IN.texcoord);
+				if (dist > _Cutoff) {
+					discard;
+				}
+
 				fixed4 c = SampleSpriteTexture(IN.texcoord);
 				c.rgb += IN.color.rgb;
 				c.rgb *= c.a;
