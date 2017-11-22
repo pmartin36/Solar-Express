@@ -14,12 +14,14 @@ public class Bullet : Damager {
 
 	public float ShieldAnimationTime;
 
+	private Color color;
+
 	// Use this for initialization
 	protected override void Start () {
-		Color c = Utils.GetColorFromGameColor(GameColor);
+		color = SpawningShip.ShipColor;
 		
 		spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-		spriteRenderer.color = c;
+		spriteRenderer.color = color;
 		spriteRenderer.material.SetFloat("_Cutoff", 0.1f);
 
 		ParticleSystem[] ps = GetComponentsInChildren<ParticleSystem>();
@@ -29,7 +31,7 @@ public class Bullet : Damager {
 		em.enabled = false;
 
 		var main = sparkle.main;
-		main.startColor = new ParticleSystem.MinMaxGradient(Color.white, c);
+		main.startColor = new ParticleSystem.MinMaxGradient(Color.white, color);
 
 		dust = ps.First(p => !p.main.loop);
 	}
@@ -46,6 +48,7 @@ public class Bullet : Damager {
 
 	public override void HitShield() {
 		base.HitShield();
+		(GameManager.Instance.ContextManager as LevelManager).PointManager.IncrementPoints(1000, "Hypership Shot Blocked", color);
 		StartCoroutine(HitTarget(0.1f));
 	}
 

@@ -2,12 +2,14 @@ Shader "Sprites/LaserShip"
 {
 	Properties
 	{
-		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
+		_MainTex ("Sprite Texture", 2D) = "white" {}
 		_Color ("Tint", Color) = (1,1,1,1)
 
 		_DetailTex("Detail Tex", 2D) = "black" {}
-		_Cutoff("Cutoff Value", Range(0.01,0.99)) = 0
+		
 		_DetailColor("Detail Color", Color) = (1,1,1,1)
+
+		_Cutoff("Cutoff Value", Range(0.01,0.99)) = 0
 
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
 	}
@@ -82,7 +84,10 @@ Shader "Sprites/LaserShip"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				
+				if (abs(IN.texcoord.y*2-1) > _Cutoff) {
+					discard;
+				}
+
 				fixed4 d = tex2D(_DetailTex, IN.texcoord);
 				fixed4 c = tex2D(_MainTex, IN.texcoord);
 				if (d.a >= _Cutoff) {

@@ -29,14 +29,15 @@ public class TouchController : MonoBehaviour {
 				angleDiff += (touchDownAngle - tangle);
 			}
 			else {
+				// process input as input for ship
 				touchDownAngle = Vector3.Angle(Vector3.right, touchPosition);
 				touchDownAngle *= -Mathf.Sign(Vector3.Cross(Vector3.right, touchPosition).z);
 				touchDown = true;
-				playerStartAngle = GameManager.Instance.PlayerShip.transform.localRotation.eulerAngles.z;
+				playerStartAngle = (GameManager.Instance.ContextManager as LevelManager).PlayerShip.transform.localRotation.eulerAngles.z;
 			}
 			angleDiff += playerStartAngle;
 
-			GameManager.Instance.ProcessInputs(new InputPackage() {
+			(GameManager.Instance.ContextManager as LevelManager).ProcessInputs(new InputPackage() {
 				AngleDiff = angleDiff,
 				TouchPosition = touchPosition
 			});

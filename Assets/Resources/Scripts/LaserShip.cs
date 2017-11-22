@@ -16,9 +16,9 @@ public class LaserShip : MonoBehaviour {
 	public static Bullet bulletPrefab;
 
 	private SpriteRenderer spriteRenderer;
-	private Color shipColor;
+	private SpriteRenderer enterSpriteRenderer;
+	public Color ShipColor { get; set; }
 
-	private ParticleSystem EnginePS;
 	private ParticleSystem [] FeedPS;
 
 	public void Init(float endDistFromShip, float startRotation = 0, int numberOfShots = 1, float timeBtwShots = 1f, float rotationBetweenShots = 0, Colors color = Colors.Red) {
@@ -31,24 +31,25 @@ public class LaserShip : MonoBehaviour {
 		StartPosition = -endDistFromShip * Direction;
 
 		GameColor = color;
-		shipColor = Utils.GetColorFromGameColor(color);
+		Color c = Utils.GetColorFromGameColor(color);
+		if(GameColor == Colors.Blue) c.g += 0.55f;
+		ShipColor = c;
 	}
 
 	// Use this for initialization
 	void Start () {
 		spriteRenderer = GetComponent<SpriteRenderer>();
-		spriteRenderer.material.SetColor("_DetailColor", shipColor);
+		spriteRenderer.material.SetColor("_DetailColor", ShipColor);
 		spriteRenderer.material.SetFloat("_Cutoff", 0.99f);
 
 		bulletPrefab = bulletPrefab ?? Resources.Load<Bullet>("Prefabs/Bullet");
 
 		var pss = GetComponentsInChildren<ParticleSystem>();
-		EnginePS = pss.Single(g => g.tag == "Laser Ship Engine");
 		FeedPS = pss.Where(g => g.tag != "Laser Ship Engine").ToArray();
 
 		foreach (ParticleSystem ps in FeedPS) {
 			var main = ps.main;
-			main.startColor = new ParticleSystem.MinMaxGradient(Color.white, shipColor);
+			main.startColor = new ParticleSystem.MinMaxGradient(Color.white, ShipColor);
 		}
 
 		StartCoroutine(PerformActions());
@@ -128,17 +129,50 @@ public class LaserShip : MonoBehaviour {
 	}
 
 	IEnumerator Spawn() {
-		float startTime = Time.time;
-
 		Vector3 spawnPosition = StartPosition - Utils.AngleToVector(StartRotation).normalized * 5;
+		transform.position = spawnPosition;
+		transform.localRotation = Quaternion.Euler(0, 0, StartRotation);
+
 		float sqrmag = (StartPosition - spawnPosition).sqrMagnitude;
-		bool startSpin = false;
+
 		float moveSpeed = 3;
 
-		transform.localRotation = Quaternion.Euler(0, 0, StartRotation+180);
-		transform.position = spawnPosition;
+		spriteRenderer.material.SetFloat("_Cutoff",0);
 
-		
+		SpriteRenderer childSpriteRenderer = null;
+		Transform childTransform = null;
+		foreach(Transform t in transform) {
+			childTransform = t;
+			childSpriteRenderer = t.GetComponent<SpriteRenderer>();
+		}
+
+		childTransform.localScale = new Vector3(1.2f, 1, 1);
+
+		while ((transform.position - spawnPosition).sqrMagnitude < sqrmag) {
+			transform.position += Direction * moveSpeed * Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+
+		while(transform.localScale.x > 1) {
+			childTransform.localScale -= Vector3.right * Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+
+		float startTime = Time.time;
+		float ttime = 0.6f;
+		while(Time.time - startTime < ttime + Time.deltaTime) {
+			float jTime = (Time.time - startTime)/ttime;
+			childTransform.localScale = new Vector3( 1, Mathf.Lerp(1,3, jTime), 1);
+			childSpriteRenderer.color = new Color(1,1,1, Mathf.Lerp(1, 0, jTime));
+			spriteRenderer.material.SetFloat("_Cutoff", Mathf.Lerp(0, 1, jTime));
+			yield return new WaitForEndOfFrame();
+		}
+
+		/*
+		transform.localRotation = Quaternion.Euler(0, 0, StartRotation + 180);
+		transform.position = spawnPosition;
+		bool startSpin = false;
+
 		while ((transform.position - spawnPosition).sqrMagnitude < sqrmag) {
 			transform.position += Direction * moveSpeed * Time.deltaTime;
 
@@ -153,14 +187,12 @@ public class LaserShip : MonoBehaviour {
 
 			yield return new WaitForEndOfFrame();
 		}
+		*/
 	}
 
 	IEnumerator SpinMovement() {
 		float startTime = Time.time;
 		float journeyTime = 1f;
-
-		var em = EnginePS.emission;
-		em.enabled = false;
 
 		float startRotation = StartRotation + 180;;
 		float endRotation = StartRotation;

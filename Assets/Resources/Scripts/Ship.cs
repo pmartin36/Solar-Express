@@ -5,7 +5,7 @@ using UnityEngine;
 public class Ship : MonoBehaviour {
 
 	public void Start() {
-		GameManager.Instance.PlayerShip = this;	
+		(GameManager.Instance.ContextManager as LevelManager).PlayerShip = this;	
 	}
 
 	public void Rotate(InputPackage r) {

@@ -11,6 +11,8 @@ public class OrbitingEnemy : MonoBehaviour {
 	SpriteRenderer spriteRenderer;
 	SpriteRenderer sight;
 
+	ParticleSystem engineParticles;
+
 	public float deltaDistance = 0f;
 	
 	private float _chargeAmount;
@@ -38,6 +40,7 @@ public class OrbitingEnemy : MonoBehaviour {
 
 	bool Orbiting = false;
 	bool Fired = false;
+	bool PointsAwarded = false;
 	float amountRotated = 0f;
 	float rotationalMovement;
 
@@ -57,6 +60,9 @@ public class OrbitingEnemy : MonoBehaviour {
 		BulletPrefab = BulletPrefab ?? Resources.Load<OrbiterBullet>("Prefabs/OrbiterBullet");
 		SightPrefab = SightPrefab ?? Resources.Load<SpriteRenderer>("Prefabs/Sight");
 
+		engineParticles = GetComponentInChildren<ParticleSystem>();
+		var main = engineParticles.main;
+		main.startRotation = (180-angle)*Mathf.Deg2Rad;
 
 		GameColor = c;
 		color = Utils.GetColorFromGameColor(c);
@@ -74,7 +80,7 @@ public class OrbitingEnemy : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		ObjectToOrbit = ObjectToOrbit ?? GameManager.Instance.PlayerShip.transform;
+		ObjectToOrbit = ObjectToOrbit ?? (GameManager.Instance.ContextManager as LevelManager).PlayerShip.transform;
 		Vector2 direction = ObjectToOrbit.transform.position - this.transform.position;
 
 		gunSpriteRenderer.transform.rotation = Quaternion.Euler(0,0, Utils.VectorToAngle(direction)-90);
@@ -91,6 +97,7 @@ public class OrbitingEnemy : MonoBehaviour {
 				sight.material.SetColor("_Color", color);
 
 				StartCoroutine(Charge());
+				StartCoroutine(KillEngine());
 			}
 			else {
 				transform.position += Movement * Time.deltaTime;
@@ -107,7 +114,7 @@ public class OrbitingEnemy : MonoBehaviour {
 			if(!Fired) {
 				RaycastHit2D hit = Physics2D.CircleCast(this.transform.position, 0.1f, direction, 5f, 1 << LayerMask.NameToLayer("Shield"));
 
-				if (hit.collider != null) {
+				if (hit.rigidbody != null) {
 					Core hitCore = hit.collider.GetComponent<Core>();
 					Shield hitShield = hit.rigidbody.GetComponent<Shield>();
 					if((hitCore != null || hitShield.GameColor != this.GameColor) && ChargeAmount >= 1f) {
@@ -141,6 +148,11 @@ public class OrbitingEnemy : MonoBehaviour {
 				//Movement.x *= -1;
 				ChargeAmount = 0f;
 				rotationalMovement = 0f;
+
+				if(!Fired && !PointsAwarded) {
+					(GameManager.Instance.ContextManager as LevelManager).PointManager.IncrementPoints(2500, "Orbiter Suppressed", color);
+					PointsAwarded = true;
+				}
 			}
 		}
 	}
@@ -155,6 +167,38 @@ public class OrbitingEnemy : MonoBehaviour {
 			}
 			yield return new WaitForSeconds(0.1f);
 		}
+	}
+
+	IEnumerator KillEngine() {
+		float starTTime = Time.time;
+		var psmain = engineParticles.main;
+		float startLifetime = psmain.startLifetime.constantMax;
+		float ttime = 0.25f;
+		while(Time.time - starTTime < ttime + Time.deltaTime) {
+			float jTime = (Time.time - starTTime) / ttime;
+			float lifeTime = Mathf.Lerp(startLifetime, 0, jTime);
+			psmain.startLifetime = lifeTime;
+
+			/*
+			var particles = new ParticleSystem.Particle[engineParticles.particleCount];
+			engineParticles.GetParticles(particles);
+
+			Debug.Log("Before: " + engineParticles.particleCount);
+			for (int i = 0; i < particles.Length; i++) {
+				ParticleSystem.Particle p = particles[i];
+				p.remainingLifetime = lifeTime - p.remainingLifetime;
+				Debug.Log(p.remainingLifetime);
+			}		
+			engineParticles.SetParticles(particles, particles.Length);
+
+			Debug.Log("After: " + engineParticles.particleCount);
+			*/
+
+			yield return new WaitForEndOfFrame();
+		}
+
+		var em = engineParticles.emission;
+		em.enabled = false;
 	}
 
 	IEnumerator Fire() {

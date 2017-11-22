@@ -68,6 +68,7 @@ public class Meteor : Damager {
 	}
 
 	public override void HitShield() {
+		(GameManager.Instance.ContextManager as LevelManager).PointManager.IncrementPoints(2000, "Meteor Blocked", color);
 		StartCoroutine(HitObject());
 	}
 

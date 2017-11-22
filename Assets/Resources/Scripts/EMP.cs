@@ -52,7 +52,7 @@ public class EMP : MonoBehaviour {
 
 		textPrefab = textPrefab ?? Resources.Load<TMP_Text>("Prefabs/EMP Text");
 		explosionPrefab = explosionPrefab ?? Resources.Load<EMPExplosion>("Prefabs/EMP Explosion");
-		EMPTextCanvas = EMPTextCanvas ?? GameObject.FindGameObjectWithTag("EMPTextCanvas").GetComponent<Canvas>();
+		EMPTextCanvas = GameObject.FindGameObjectWithTag("EMPTextCanvas").GetComponent<Canvas>();
 
 		text = Instantiate(textPrefab, EMPTextCanvas.transform);
 

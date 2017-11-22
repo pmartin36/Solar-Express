@@ -11,6 +11,10 @@ TagManager:
   - Laser Ship Engine
   - EMPTextCanvas
   - EMP Explosion
+  - Menu
+  - PointSourceDisplay
+  - PointDisplay
+  - MainMenuButton
   layers:
   - Default
   - TransparentFX

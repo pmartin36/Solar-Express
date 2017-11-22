@@ -42,7 +42,8 @@ public class Shield : MonoBehaviour {
 				if (d is Bullet) {
 					Bullet b = d as Bullet;
 					animationDuration = 0.25f;
-					b.HitShield(animationDuration/2.5f);				
+					b.HitShield(animationDuration/2.5f);
+					b.HitShield();				
 				}
 				else if(d is Meteor) {
 					Meteor m = d as Meteor;

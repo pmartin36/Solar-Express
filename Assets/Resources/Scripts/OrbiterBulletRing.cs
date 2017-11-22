@@ -25,7 +25,7 @@ public class OrbiterBulletRing : MonoBehaviour {
 	SpriteRenderer spriteRenderer;
 	Animator anim;
 
-	Vector3 startScale, endScale;
+	//Vector3 startScale, endScale;
 
 	// Use this for initialization
 	void Start () {
@@ -33,8 +33,8 @@ public class OrbiterBulletRing : MonoBehaviour {
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		spriteRenderer.color = _startColor;
 
-		startScale = transform.localScale;
-		endScale = new Vector2(0.6f, 2f);	
+		//startScale = transform.localScale;
+		//endScale = new Vector2(0.6f, 2f);	
 		
 		anim = GetComponent<Animator>();
 		anim.Play("orbitalring");	
