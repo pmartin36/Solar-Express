@@ -17,11 +17,11 @@ public class SoundInGameButton : InGameButtons {
 	}
 
 	private void SetSprite() {
-		image.overrideSprite = GameManager.Instance.SoundOn ? SoundOnSprite : SoundOffSprite;
+		image.overrideSprite = GameManager.Instance.PlayerInfo.SoundOn ? SoundOnSprite : SoundOffSprite;
 	}
 
 	public override void onTouch() {
-		GameManager.Instance.SoundOn = !GameManager.Instance.SoundOn;
+		GameManager.Instance.PlayerInfo.SoundOn = !GameManager.Instance.PlayerInfo.SoundOn;
 		SetSprite();
 	}
 }

@@ -40,7 +40,9 @@ public class MainMenuButton : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-				
+		if( ButtonType == MainMenuButtonType.Continue && (GameManager.Instance.PlayerInfo.LevelStars.Count < 1)) {
+			text.text = "Start";
+		}		
 	}
 
 	private void OnEnable() {
@@ -70,7 +72,7 @@ public class MainMenuButton : MonoBehaviour {
 				(GameManager.Instance.ContextManager as MenuManager).OpenPopup(Popup1);
 				break;
 			case MainMenuButtonType.Continue:
-				GameManager.Instance.SwitchLevels(0);
+				(GameManager.Instance.ContextManager as MenuManager).CloseMenuStartPlay(GameModes.Campaign);
 				break;
 			case MainMenuButtonType.Beamium:
 				//if you haven't upgraded, this button will be disabled
@@ -82,6 +84,7 @@ public class MainMenuButton : MonoBehaviour {
 				}
 				break;
 			case MainMenuButtonType.Endless:
+				Debug.Log((GameManager.Instance.ContextManager as MenuManager).LevelSelector.Selected);
 				break;
 			case MainMenuButtonType.Exit:
 				break;

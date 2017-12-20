@@ -7,9 +7,11 @@ public class CameraController : MonoBehaviour {
 
 	private Vector3 shakeDirection;
 	public float shakeMagnitude;
-	private float shakeDampening;
+	private float shakeDampening = 25f;
 
 	Animator anim;
+
+	public Material PostMaterial;
 
 	// Use this for initialization
 	void Start () {
@@ -29,7 +31,18 @@ public class CameraController : MonoBehaviour {
 		anim.Play("screenshake");
 	}
 
+	public void Tremble() {
+		anim.Play("screentremble");
+	}
 
+	public void OnRenderImage(RenderTexture src, RenderTexture dest) {
+		if(PostMaterial != null) {
+			Graphics.Blit(src, dest, PostMaterial);
+		}
+		else {
+			Graphics.Blit(src, dest);
+		}
+	}
 	/*
 	IEnumerator ScreenShake(Vector3 d) {
 		float shakeTime = 0.1f;

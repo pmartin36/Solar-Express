@@ -19,17 +19,20 @@ public class PointManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Color textColor = PointSourceDisplay.color;
-		textColor.a -= Mathf.Clamp01(1f * Time.deltaTime);
-		PointSourceDisplay.color = textColor;
+		if(!(GameManager.Instance.ContextManager as LevelManager).CampaignMode) {
+			Color textColor = PointSourceDisplay.color;
+			textColor.a -= Mathf.Clamp01(1f * Time.deltaTime);
+			PointSourceDisplay.color = textColor;
+		}
 	}
 
 	public void IncrementPoints(int points, string source, Color c) {
 		Points += points;
 		PointDisplay.text = Points.ToString();
 		
-		PointSourceDisplay.color = c;
-
-		PointSourceDisplay.text = source;
+		if(!(GameManager.Instance.ContextManager as LevelManager).CampaignMode) {
+			PointSourceDisplay.color = c;
+			PointSourceDisplay.text = source;
+		}
 	}
 }

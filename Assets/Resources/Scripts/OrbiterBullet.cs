@@ -30,10 +30,18 @@ public class OrbiterBullet : Damager {
 		transform.position -= direction.normalized * 0.1f;
 	}
 
-	public override void HitCore() {
+	public override void HitCore(bool screenshake = true) {
 		base.HitCore();
-		GameManager.Instance.MainCameraController.Shake(-Movement/3.5f);
+		if(screenshake) {
+			GameManager.Instance.MainCameraController.Shake(-Movement/3.5f);
+		}
 		Movement = Vector3.zero;
+		StartCoroutine(DestroyAfterSeconds());
+	}
+
+	public IEnumerator DestroyAfterSeconds() {
+		yield return new WaitForSeconds(2f);
+		Destroy(this.gameObject);
 	}
 
 	// Update is called once per frame

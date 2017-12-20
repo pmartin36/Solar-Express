@@ -22,11 +22,11 @@ public class Damager : MonoBehaviour {
 	}
 
 	public virtual void HitShield() {
-		Debug.Log("Hit Shield");
+		//Debug.Log("Hit Shield");
 	}
 
-	public virtual void HitCore() {
-		Debug.Log("Hit Core");
+	public virtual void HitCore(bool screenshake = true) {
+		//Debug.Log("Hit Core");
 	}
 
 	//protected virtual void OnCollisionEnter2D(Collision2D collision) {

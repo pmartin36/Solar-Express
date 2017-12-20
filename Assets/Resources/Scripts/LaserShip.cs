@@ -106,26 +106,56 @@ public class LaserShip : MonoBehaviour {
 			}
 
 			yield return new WaitUntil(() => !b.Charging);
-
-			//discharge
-			/*
-			startTime = Time.time;
-			while (Time.time - startTime < 0.5f + Time.deltaTime) {
-				float jTime = (Time.time - startTime) / 0.1f;
-				spriteRenderer.material.SetFloat("_Cutoff", Mathf.Lerp(0.01f, 0.99f, jTime));
-				yield return new WaitForEndOfFrame();
-			}			
-
-			startTime = Time.time;
-			float startRotation = transform.localRotation.eulerAngles.z;
-			float endRotation = startRotation + RotationBetweenShots;
-			while( Time.time - startTime < TimeBetweenShots / scale + Time.deltaTime) {
-				float jTime = (Time.time - startTime) / TimeBetweenShots;
-				transform.localRotation = Quaternion.Euler( 0, 0, Mathf.Lerp(startRotation, endRotation, jTime * scale) );
-				yield return new WaitForEndOfFrame();
-			}
-			*/
 		}
+
+		//Despawn
+		yield return new WaitForSeconds(1f);
+		StartCoroutine(Despawn());
+	}
+
+	IEnumerator Despawn() {
+		Vector3 endPosition = StartPosition + Utils.AngleToVector(StartRotation).normalized;
+		Vector3 moveDirection = (endPosition - StartPosition).normalized;
+		float moveSpeed = 3;
+
+		StartCoroutine(PhaseOut());
+		yield return new WaitForSeconds(0.5f);
+		while(true) { 
+			transform.position += moveDirection * moveSpeed * Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+	}
+
+	IEnumerator PhaseOut() {
+		SpriteRenderer childSpriteRenderer = null;
+		Transform childTransform = null;
+		foreach (Transform t in transform) {
+			childTransform = t;
+			childSpriteRenderer = t.GetComponent<SpriteRenderer>();
+		}
+
+		float startTime = Time.time;
+		float ttime = 0.6f;
+		while (Time.time - startTime < ttime + Time.deltaTime) {
+			float jTime = (Time.time - startTime) / ttime;
+			childTransform.localScale = new Vector3(1, Mathf.Lerp(3, 1, jTime), 1);
+			childSpriteRenderer.color = new Color(1, 1, 1, Mathf.Lerp(0, 1, jTime));
+			spriteRenderer.material.SetFloat("_Cutoff", Mathf.Lerp(1, 0, jTime));
+			yield return new WaitForEndOfFrame();
+		}
+
+		startTime = Time.time;
+		ttime = 1f;
+		spriteRenderer.color = Color.clear;
+		while ( Time.time - startTime < ttime + Time.deltaTime) {
+			float jTime = (Time.time - startTime) / ttime;
+			
+			//spriteRenderer.color = Color.Lerp(Color.white, Color.clear, jTime*2);
+			childSpriteRenderer.color = Color.Lerp( Color.white, Color.clear, jTime );
+			yield return new WaitForEndOfFrame();
+		}
+
+		Destroy(this.gameObject);
 	}
 
 	IEnumerator Spawn() {
@@ -165,42 +195,6 @@ public class LaserShip : MonoBehaviour {
 			childTransform.localScale = new Vector3( 1, Mathf.Lerp(1,3, jTime), 1);
 			childSpriteRenderer.color = new Color(1,1,1, Mathf.Lerp(1, 0, jTime));
 			spriteRenderer.material.SetFloat("_Cutoff", Mathf.Lerp(0, 1, jTime));
-			yield return new WaitForEndOfFrame();
-		}
-
-		/*
-		transform.localRotation = Quaternion.Euler(0, 0, StartRotation + 180);
-		transform.position = spawnPosition;
-		bool startSpin = false;
-
-		while ((transform.position - spawnPosition).sqrMagnitude < sqrmag) {
-			transform.position += Direction * moveSpeed * Time.deltaTime;
-
-			float posdiff = (StartPosition - transform.position).sqrMagnitude;
-			if ( posdiff < 1f ) {
-				moveSpeed = Mathf.Max(0.5f, posdiff*2f);
-				if(!startSpin) {
-					startSpin = true;
-					StartCoroutine(SpinMovement());
-				}
-			}
-
-			yield return new WaitForEndOfFrame();
-		}
-		*/
-	}
-
-	IEnumerator SpinMovement() {
-		float startTime = Time.time;
-		float journeyTime = 1f;
-
-		float startRotation = StartRotation + 180;;
-		float endRotation = StartRotation;
-		Debug.Log(string.Format("{0}, {1}", startRotation, endRotation));
-
-		while (Time.time - startTime < journeyTime + Time.deltaTime) {
-			float jTime = (Time.time - startTime) / journeyTime;
-			transform.localRotation = Quaternion.Euler(0,0, Mathf.Lerp(startRotation, endRotation, jTime));
 			yield return new WaitForEndOfFrame();
 		}
 	}

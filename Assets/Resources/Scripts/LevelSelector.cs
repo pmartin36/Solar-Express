@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class LevelSelector : ScrollRect {
 
@@ -21,17 +22,51 @@ public class LevelSelector : ScrollRect {
 	bool moving;
 
 	public float decelRate = 0.135f;
+	public List<LevelSelectElement> Elements;
 
-	// Use this for initialization
-	protected override void Start () {
-		var layoutelements = content.GetComponentsInChildren<LayoutElement>();
-		numTiles = layoutelements.Length - 1;
-		if(layoutelements.Length > 0) {
-			singleElementWidth = layoutelements[0].minWidth;
-			totalWidth = (layoutelements.Length) * singleElementWidth;
+	public int Selected {
+		get {
+			return (int) Math.Round( this.horizontalNormalizedPosition * (numTiles) );
 		}
 	}
 
+	// Use this for initialization
+	protected override void Start () {
+		base.Start();
+		if(!EditorApplication.isPlaying) return;
+
+		Elements = content.GetComponentsInChildren<LevelSelectElement>().OrderBy(g => g.transform.position.x).ToList();
+		numTiles = GameManager.Instance.PlayerInfo.LevelStars.Count;
+		for (int i = 0; i < Elements.Count; i++) {
+			LevelSelectElement e = Elements[i];
+			if ( i <= numTiles) {
+				var ls = GameManager.Instance.PlayerInfo.LevelStars;
+				e.gameObject.SetActive(true);
+				e.SetStars( ls.Count > i ? ls[i] : 0 );
+			}
+			else {
+				e.gameObject.SetActive(false);
+			}		
+		}
+
+		singleElementWidth = Elements[0].minWidth;
+		totalWidth = (numTiles+1) * singleElementWidth;
+
+		this.horizontalNormalizedPosition = 1;
+		
+		/*
+		var layoutelements = content.GetComponentsInChildren<LayoutElement>();
+		numTiles = layoutelements.Length - 1;
+		if (layoutelements.Length > 0) {
+			singleElementWidth = layoutelements[0].minWidth;
+			totalWidth = (layoutelements.Length) * singleElementWidth;
+		}
+		*/
+	}
+
+	protected override void OnEnable() {
+		base.OnEnable();
+	}
 
 	// Update is called once per frame
 	void Update () {
@@ -100,5 +135,21 @@ public class LevelSelector : ScrollRect {
 		Debug.Log("Estimated Movement: " + movement);
 		Debug.Log("Initial Estimated Position: " + (estPos));
 		Debug.Log("Tiled Position: " + (nearestTile) );
+	}
+
+	public void SetSelectedRingAlpha(float v) {
+		Elements[Selected].SetRingAlpha(v);
+	}
+
+	public void SetElementsAlpha2(float alpha) {
+		foreach(LevelSelectElement e in Elements) {
+			e.SetAlpha2(alpha);
+		}
+	}
+
+	public void SetElementsAlpha(float alpha) {
+		foreach (LevelSelectElement e in Elements) {
+			e.SetAlpha(alpha);
+		}
 	}
 }

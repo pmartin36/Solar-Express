@@ -21,7 +21,7 @@ Shader "Sprites/CopyDefault"
 		Cull Off
 		Lighting Off
 		ZWrite Off
-		Blend One OneMinusSrcAlpha
+		Blend SrcAlpha OneMinusSrcAlpha
 
 		Pass
 		{
@@ -45,7 +45,7 @@ Shader "Sprites/CopyDefault"
 			{
 				float4 vertex   : SV_POSITION;
 				fixed4 color    : COLOR;
-				float2 texcoord  : TEXCOORD0;
+				float2 uv  : TEXCOORD0;
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 			
@@ -58,7 +58,7 @@ Shader "Sprites/CopyDefault"
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
 
 				OUT.vertex = UnityObjectToClipPos(IN.vertex);
-				OUT.texcoord = IN.texcoord;
+				OUT.uv = IN.texcoord;
 				OUT.color = IN.color * _Color;
 
 				#ifdef PIXELSNAP_ON
@@ -71,16 +71,9 @@ Shader "Sprites/CopyDefault"
 			sampler2D _MainTex;
 			sampler2D _AlphaTex;
 
-			fixed4 SampleSpriteTexture (float2 uv)
+			fixed4 frag(v2f i) : SV_Target
 			{
-				fixed4 color = tex2D (_MainTex, uv);
-
-				return color;
-			}
-
-			fixed4 frag(v2f IN) : SV_Target
-			{
-				fixed4 c = SampleSpriteTexture (IN.texcoord) * IN.color;
+				fixed4 c = tex2D(_MainTex, i.uv) * i.color;
 				c.rgb *= c.a;
 				return c;
 			}

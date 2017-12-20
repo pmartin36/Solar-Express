@@ -103,6 +103,10 @@ public class Shield : MonoBehaviour {
 		ToggleDisabled(false);
 	}
 
+	public void SetColliderActive(bool active) {
+		polycollider.enabled = active;
+	}
+
 	IEnumerator HitShield(Color c, int index, float animationDuration) {
 		//ringColor[index] = c;
 

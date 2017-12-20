@@ -5,6 +5,7 @@ using System.Text;
 using UnityEngine;
 
 public enum Colors { Red, Green, Blue, Yellow }
+public enum GameModes { Campaign, Endless, Beamium }
 
 class Utils {
 

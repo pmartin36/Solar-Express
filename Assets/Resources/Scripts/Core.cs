@@ -17,7 +17,7 @@ public class Core : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Health = 4;
+		Health = 2;
 		spriteRenderer = GetComponent<SpriteRenderer>();
 	}
 	
@@ -31,15 +31,30 @@ public class Core : MonoBehaviour {
 	public void OnTriggerEnter2D(Collider2D collision) {
 		if (collision.tag == "Damager") {			
 			Damager d = collision.GetComponent<Damager>();
-			d.HitCore();
 
 			Health--;
-			if(Health > 0) {
-				StartCoroutine(ShipHit(collision.transform.position - this.transform.position));
-				spriteRenderer.material.SetTexture("_ColorMap", LightSprites[Health]);
+			StartCoroutine(ShipHit(collision.transform.position - this.transform.position));
+			
+			if(Health < 0) {
+				//if the player got hit after their health reached 0
+
+				//verify that the player is already in it's death animation...if not, start it
+				if( !(GameManager.Instance.ContextManager as LevelManager).PlayerDead ) {
+					(GameManager.Instance.ContextManager as LevelManager).PlayerDied();
+				}
+
+				//no screen shake on posthumous hits
+				d.HitCore(false);
 			}
 			else {
-
+				spriteRenderer.material.SetTexture("_ColorMap", LightSprites[Health]);
+				if (Health <= 0) {
+					(GameManager.Instance.ContextManager as LevelManager).PlayerDied();
+					d.HitCore(true);
+				}
+				else {
+					d.HitCore(true);
+				}
 			}
 		}
 	}

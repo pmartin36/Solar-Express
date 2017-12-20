@@ -21,6 +21,7 @@ public class Meteor : Damager {
 		base.Init();
 		GameColor = c;
 
+		angle -= 45;
 		transform.localRotation = Quaternion.Euler(0,0,angle);
 		Movement = Utils.AngleToVector(angle-135) * vel;
 
@@ -72,8 +73,10 @@ public class Meteor : Damager {
 		StartCoroutine(HitObject());
 	}
 
-	public override void HitCore() {
-		GameManager.Instance.MainCameraController.Shake(-Movement);
+	public override void HitCore(bool screenshake = true) {
+		if (screenshake) {
+			GameManager.Instance.MainCameraController.Shake(-Movement);
+		}
 		StartCoroutine(HitObject());	
 	}
 

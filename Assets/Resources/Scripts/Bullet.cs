@@ -57,10 +57,11 @@ public class Bullet : Damager {
 		StartCoroutine(HitTarget(animationDuration));
 	}
 
-	public override void HitCore() {
+	public override void HitCore(bool screenshake = true) {
 		base.HitCore();
-
-		GameManager.Instance.MainCameraController.Shake(-Movement);
+		if (screenshake) {
+			GameManager.Instance.MainCameraController.Shake(-Movement);
+		}
 		StartCoroutine(HitTarget(0.1f));
 	}
 

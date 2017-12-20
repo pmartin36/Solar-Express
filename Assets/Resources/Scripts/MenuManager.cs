@@ -13,10 +13,13 @@ public class MenuManager : ContextManager {
 	public Popup ActivePopup;
 	public RectTransform ActivePopupRectTransform;
 
+	public LevelSelector LevelSelector;
+
 	// Use this for initialization
 	void Start () {
 		Input.multiTouchEnabled = false;
 		GameManager.Instance.RegisterContextManager(this);	
+		GameManager.Instance.MenuParticles.SetActive(true);
 	}
 	
 	public void SetActiveScreen(bool homeActive) {
@@ -115,6 +118,74 @@ public class MenuManager : ContextManager {
 		foreach (Button b in homebuttons) {
 			b.interactable = true;
 		}
+	}
+
+	public void CloseMenuStartPlay(GameModes gameMode) {
+		StopCoroutine(CloseHomeScreen());
+
+		//determine new scene index based on game mode and level selected
+
+		//start transition
+		StartCoroutine(CloseMenu(0));
+	}
+
+	IEnumerator CloseMenu(int newSceneIndex) {		
+		float startTime = Time.time;
+		float ttime = 2f;
+		List<Button> lsbuttons = LevelSelectScreen.GetComponentsInChildren<Button>().Where(t => t.tag == "MainMenuButton").ToList();
+
+		foreach(Button b in lsbuttons) { b.interactable = false; }
+		yield return new WaitForEndOfFrame();
+
+		Vector3 startCameraPosition = Vector3.back*10;
+		Vector3 endCameraPosition = new Vector3(0, LevelSelector.transform.position.y+0.04f, -10);
+		Color endColor = new Color(0, 8f/255f, 21f/255f);
+
+		//var ps = GameManager.Instance.MenuParticles.GetComponentsInChildren<ParticleSystem>();
+		//foreach (ParticleSystem p in ps) {
+		//	var em = p.emission;
+		//	em.enabled = false;
+		//}
+
+		Image scrollviewimage = LevelSelector.GetComponent<Image>();
+
+		while (Time.time - startTime < ttime + Time.deltaTime) {
+			float jTime = (Time.time - startTime) / ttime;
+
+			Camera.main.transform.position = Vector3.Lerp( startCameraPosition, endCameraPosition, jTime);
+			Camera.main.orthographicSize = Mathf.Lerp(5,0.7f,jTime);
+			Camera.main.backgroundColor = Color.Lerp(Color.black, endColor, jTime);
+
+			LevelSelector.SetSelectedRingAlpha( Mathf.Lerp(0,0.5f,jTime) );
+			LevelSelector.SetElementsAlpha2( Mathf.Lerp(1, 0, jTime) );
+
+			scrollviewimage.color = new Color(endColor.r, endColor.g, endColor.b, Mathf.Lerp(0,1,jTime));
+
+			yield return new WaitForEndOfFrame();
+		}
+
+		//yield return new WaitForSeconds(0.5f);
+
+		/*
+		while (Time.time - startTime < ttime + Time.deltaTime) {
+			float jTime = (Time.time - startTime) / ttime;
+			float interp = Mathf.Lerp(1, 0, jTime);
+
+			foreach (Button b in lsbuttons) {
+				var bc = b.colors;
+				Color c = bc.disabledColor;
+				c.a = interp;
+				bc.disabledColor = c;
+				b.colors = bc;
+			}
+
+			LevelSelector.SetElementsAlpha(interp);
+
+			yield return new WaitForEndOfFrame();
+		}
+		yield return new WaitForSeconds(1f);
+		*/
+		GameManager.Instance.SwitchLevels(newSceneIndex);
 	}
 
 	IEnumerator ToLevelSelect() {	

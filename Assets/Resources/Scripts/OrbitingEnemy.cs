@@ -40,15 +40,19 @@ public class OrbitingEnemy : MonoBehaviour {
 
 	bool Orbiting = false;
 	bool Fired = false;
-	bool PointsAwarded = false;
 	float amountRotated = 0f;
 	float rotationalMovement;
+	private float MoveSpeed;
+	private bool despawnBegan = false;
 
-	public static OrbiterBulletRing RingPrefab;
+	//public static OrbiterBulletRing RingPrefab;
 	public static OrbiterBullet BulletPrefab;
 	public static SpriteRenderer SightPrefab;
 
+	
 	Animator anim;
+
+	
 
 	// Use this for initialization
 	void Start () {
@@ -56,9 +60,11 @@ public class OrbitingEnemy : MonoBehaviour {
 	}
 	
 	public void Init(Colors c, float moveSpeed = 2f, float angle = 0) {
-		RingPrefab = RingPrefab ?? Resources.Load<OrbiterBulletRing>("Prefabs/OrbiterBulletRing");
+		//RingPrefab = RingPrefab ?? Resources.Load<OrbiterBulletRing>("Prefabs/OrbiterBulletRing");
 		BulletPrefab = BulletPrefab ?? Resources.Load<OrbiterBullet>("Prefabs/OrbiterBullet");
 		SightPrefab = SightPrefab ?? Resources.Load<SpriteRenderer>("Prefabs/Sight");
+
+		MoveSpeed = moveSpeed;
 
 		engineParticles = GetComponentInChildren<ParticleSystem>();
 		var main = engineParticles.main;
@@ -82,8 +88,7 @@ public class OrbitingEnemy : MonoBehaviour {
 	void Update () {
 		ObjectToOrbit = ObjectToOrbit ?? (GameManager.Instance.ContextManager as LevelManager).PlayerShip.transform;
 		Vector2 direction = ObjectToOrbit.transform.position - this.transform.position;
-
-		gunSpriteRenderer.transform.rotation = Quaternion.Euler(0,0, Utils.VectorToAngle(direction)-90);
+		float angle = Utils.VectorToAngle(direction);
 
 		if (!Orbiting) {
 			float dist = Vector2.Distance(transform.position, ObjectToOrbit.position);
@@ -121,21 +126,21 @@ public class OrbitingEnemy : MonoBehaviour {
 						//Fire missile
 						Fired = true;
 						
-						float angle = Vector3.Angle(Vector2.right, this.transform.position);
+						float moveangle = Vector3.Angle(Vector2.right, this.transform.position);
 						if (Vector3.Cross(Vector2.right, (Vector2)this.transform.position).z < 0) {
-							angle *= -1;
+							moveangle *= -1;
 						}
 
-						OrbiterBulletRing obr = Instantiate(RingPrefab, transform.position, Quaternion.Euler(0,0,angle));
-						obr.Color = Color.clear;
-						obr.AnimationDuration = 1.5f;
-						obr.transform.position += (Vector3)direction * 0.15f;
+						//OrbiterBulletRing obr = Instantiate(RingPrefab, transform.position, Quaternion.Euler(0,0, moveangle));
+						//obr.Color = Color.clear;
+						//obr.AnimationDuration = 1.5f;
+						//obr.transform.position += (Vector3)direction * 0.15f;
 
 						OrbiterBullet ob = Instantiate(BulletPrefab, transform.position, Quaternion.identity);
 						ob.Init(GameColor, direction);
 
-						StartCoroutine(Fire());				
-						Destroy(sight.gameObject);
+						StartCoroutine(Fire());
+						sight.enabled = false;
 					}
 					else {
 						sight.transform.position = hit.point;
@@ -143,18 +148,49 @@ public class OrbitingEnemy : MonoBehaviour {
 				}
 			}
 
-			if(amountRotated >= 180) {
+			if(amountRotated >= 180 && !despawnBegan) {
 				//Orbiting = false;
 				//Movement.x *= -1;
 				ChargeAmount = 0f;
 				rotationalMovement = 0f;
 
-				if(!Fired && !PointsAwarded) {
+				if(!Fired) {
 					(GameManager.Instance.ContextManager as LevelManager).PointManager.IncrementPoints(2500, "Orbiter Suppressed", color);
-					PointsAwarded = true;
 				}
+
+				StartCoroutine(Despawn());
+				Destroy(sight.gameObject);
+				despawnBegan = true;
 			}
 		}
+
+		gunSpriteRenderer.transform.rotation = Quaternion.Euler(0, 0, angle - 90);
+	}
+
+	IEnumerator Despawn() {
+		Vector2 direction = ObjectToOrbit.transform.position - this.transform.position;
+		float angle = Utils.VectorToAngle(direction);
+		transform.localRotation = Quaternion.Euler(0, 0, angle - 90);
+
+		Vector3 initialPosition = transform.position;
+		Movement = Utils.AngleToVector(angle - 90) * MoveSpeed*0.9f;
+
+		var psmain = engineParticles.main;
+		psmain.startLifetime = 1.2f;
+		psmain.startRotation = Mathf.Deg2Rad * (angle + 180);
+
+		//turn back on engine
+		var em = engineParticles.emission;
+		em.enabled = true;	
+
+		sight.enabled = false;
+
+		while( (transform.position - initialPosition).sqrMagnitude < 100 ) {
+			transform.position += Movement * Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+
+		Destroy(this.gameObject);
 	}
 
 	IEnumerator Charge() {
@@ -178,21 +214,6 @@ public class OrbitingEnemy : MonoBehaviour {
 			float jTime = (Time.time - starTTime) / ttime;
 			float lifeTime = Mathf.Lerp(startLifetime, 0, jTime);
 			psmain.startLifetime = lifeTime;
-
-			/*
-			var particles = new ParticleSystem.Particle[engineParticles.particleCount];
-			engineParticles.GetParticles(particles);
-
-			Debug.Log("Before: " + engineParticles.particleCount);
-			for (int i = 0; i < particles.Length; i++) {
-				ParticleSystem.Particle p = particles[i];
-				p.remainingLifetime = lifeTime - p.remainingLifetime;
-				Debug.Log(p.remainingLifetime);
-			}		
-			engineParticles.SetParticles(particles, particles.Length);
-
-			Debug.Log("After: " + engineParticles.particleCount);
-			*/
 
 			yield return new WaitForEndOfFrame();
 		}
