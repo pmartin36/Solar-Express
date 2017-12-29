@@ -64,8 +64,8 @@ public class Meteor : Damager {
 	}
 
 	// Update is called once per frame
-	protected override void Update () {
-		transform.position += Movement * Time.deltaTime;
+	protected override void FixedUpdate () {
+		transform.position += Movement * Time.fixedDeltaTime;
 	}
 
 	public override void HitShield() {

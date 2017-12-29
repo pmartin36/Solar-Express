@@ -15,7 +15,9 @@ public class MainMenuButton : MonoBehaviour {
 		Continue,
 		Beamium,
 		Endless,
-		Exit
+		Exit,
+		//Story Screen
+		Next
 	}
 
 	public MainMenuButtonType ButtonType;
@@ -60,13 +62,6 @@ public class MainMenuButton : MonoBehaviour {
 				(GameManager.Instance.ContextManager as MenuManager).SwitchToLevelSelect();
 				break;
 			case MainMenuButtonType.Upgrade:
-				//once you've upgraded, this button will be disabled
-				if(Enabled) {
-					(GameManager.Instance.ContextManager as MenuManager).OpenPopup(Popup1);
-				}
-				else {
-					(GameManager.Instance.ContextManager as MenuManager).OpenPopup(Popup2);
-				}
 				break;
 			case MainMenuButtonType.Credits:
 				(GameManager.Instance.ContextManager as MenuManager).OpenPopup(Popup1);
@@ -75,13 +70,6 @@ public class MainMenuButton : MonoBehaviour {
 				(GameManager.Instance.ContextManager as MenuManager).CloseMenuStartPlay(GameModes.Campaign);
 				break;
 			case MainMenuButtonType.Beamium:
-				//if you haven't upgraded, this button will be disabled
-				if (Enabled) {
-
-				}
-				else {
-					(GameManager.Instance.ContextManager as MenuManager).OpenPopup(Popup1);
-				}
 				break;
 			case MainMenuButtonType.Endless:
 				Debug.Log((GameManager.Instance.ContextManager as MenuManager).LevelSelector.Selected);

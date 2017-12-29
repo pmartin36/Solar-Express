@@ -33,6 +33,11 @@ public class MenuManager : ContextManager {
 
 	// Update is called once per frame
 	void Update () {
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			Application.Quit();
+		}
+		
+
 		if (ActivePopup != null && Input.touchCount > 0) {
 			Touch t = Input.GetTouch(0);
 			Vector2 touchPosition = t.position;
@@ -66,20 +71,26 @@ public class MenuManager : ContextManager {
 			b.colors = bc;
 		}
 		HomeScreen.SetActive(false);
-		LevelSelectScreen.SetActive(true);
 
-		startTime = Time.time;
+		if (GameManager.Instance.FirstTimePlaying) {
+			GameManager.Instance.SwitchLevels(Utils.StoryScene);
+		}
+		else {
+			LevelSelectScreen.SetActive(true);
 
-		while (Time.time - startTime < ttime + Time.deltaTime) {
-			float jTime = (Time.time - startTime) / ttime;
-			foreach (Button b in lsbuttons) {
-				var bc = b.colors;
-				Color c = bc.normalColor;
-				c.a = Mathf.Lerp(0, 1, jTime);
-				bc.normalColor = c;
-				b.colors = bc;
+			startTime = Time.time;
+
+			while (Time.time - startTime < ttime + Time.deltaTime) {
+				float jTime = (Time.time - startTime) / ttime;
+				foreach (Button b in lsbuttons) {
+					var bc = b.colors;
+					Color c = bc.normalColor;
+					c.a = Mathf.Lerp(0, 1, jTime);
+					bc.normalColor = c;
+					b.colors = bc;
+				}
+				yield return new WaitForEndOfFrame();
 			}
-			yield return new WaitForEndOfFrame();
 		}
 	}
 
@@ -126,7 +137,7 @@ public class MenuManager : ContextManager {
 		//determine new scene index based on game mode and level selected
 
 		//start transition
-		StartCoroutine(CloseMenu(0));
+		StartCoroutine(CloseMenu(Utils.LevelSceneFromLevel(0)));
 	}
 
 	IEnumerator CloseMenu(int newSceneIndex) {		

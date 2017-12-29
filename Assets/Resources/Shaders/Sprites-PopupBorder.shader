@@ -33,16 +33,20 @@ Shader "Sprites/PopupBorder"
 			#pragma multi_compile _ ETC1_EXTERNAL_ALPHA
 			#include "UnityCG.cginc"
 
+			fixed4 _Color;
+
 			struct appdata
 			{
 				float4 vertex : POSITION;
 				float2 uv : TEXCOORD0;
+				float4 color    : COLOR;
 			};
 
 			struct v2f
 			{
 				float4 vertex : SV_POSITION;
 				float2 uv : TEXCOORD0;
+				float4 color    : COLOR;
 			};
 
 			v2f vert(appdata v)
@@ -50,6 +54,7 @@ Shader "Sprites/PopupBorder"
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = v.uv;
+				o.color = v.color * _Color;
 				return o;
 			}
 
@@ -69,7 +74,7 @@ Shader "Sprites/PopupBorder"
 				float2 uvn = i.uv * 2 - 1;
 				float uva = saturate(VectorToAngle(uvn) / 360.0) + _Time.x;
 
-				float4 c = tex2D(_BorderTex, float2(uva, 1));
+				float4 c = tex2D(_BorderTex, float2(uva, 1)) * i.color;
 				c.rgb *= 0.75;
 
 				return c;

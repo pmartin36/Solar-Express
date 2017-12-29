@@ -14,6 +14,8 @@ public class GameManager : Singleton<GameManager> {
 	public PlayerInfo PlayerInfo { get; set; }
 	public GameObject MenuParticles { get; set; }
 
+	public bool FirstTimePlaying { get; set; }
+
 	public void Awake() {		
 		TransitioningToHome = true;
 
@@ -23,12 +25,14 @@ public class GameManager : Singleton<GameManager> {
 
 		//for testing
 		PlayerInfo.LevelStars = new List<int>() {
-			1, 2, 3, 2, 1, 0, 3, 2, 1
+			//1, 2, 3, 2, 1, 0
 		};
 
 		GameObject particlePrefab = Resources.Load<GameObject>("Prefabs/MenuParticles");
 		MenuParticles = Instantiate(particlePrefab);
 		DontDestroyOnLoad(MenuParticles);
+
+		FirstTimePlaying = PlayerInfo.LevelStars.Count == 0;
 	}
 
 	public void SwitchLevels(int index = 0) {

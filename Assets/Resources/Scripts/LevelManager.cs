@@ -22,6 +22,8 @@ public class LevelManager : ContextManager {
 	public ProgressBarManager ProgressBar;
 	public Planet StartingPlanet, EndingPlanet;
 
+	public ParticleSystem FingerParticles;
+
 	private float LevelLength = 90f;
 	private float CurrentLevelTime = 0f;
 
@@ -42,8 +44,18 @@ public class LevelManager : ContextManager {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if(!PlayerDead) {
+	void Update () {		
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			if (MenuOpen) {
+				ToggleMenu();
+			}
+			else {
+				//go to menu
+				GameManager.Instance.SwitchLevels(Utils.MenuScene);
+			}
+		}
+
+		if (!PlayerDead) {
 			CurrentLevelTime += Time.deltaTime;
 			ProgressBar.UpdateProgressBar(CurrentLevelTime / LevelLength);
 		}
@@ -179,13 +191,13 @@ public class LevelManager : ContextManager {
 	}
 
 	IEnumerator SpawnLevel() {
-		Meteor m = Instantiate(meteorPrefab, new Vector2(0, 1) * 5, Quaternion.identity);
+		Meteor m = Instantiate(meteorPrefab, new Vector2(0, 1.5f) * 5, Quaternion.identity);
 		m.Init(Colors.Blue, 90, 5, 0.5f);
-		Meteor m2 = Instantiate(meteorPrefab, new Vector2(0, -1) * 5, Quaternion.identity);
+		Meteor m2 = Instantiate(meteorPrefab, new Vector2(0, -1.5f) * 5, Quaternion.identity);
 		m2.Init(Colors.Red, -90, 5, 0.5f);
-		Meteor m3 = Instantiate(meteorPrefab, new Vector2(1, 0) * 5, Quaternion.identity);
+		Meteor m3 = Instantiate(meteorPrefab, new Vector2(1.5f, 0) * 5, Quaternion.identity);
 		m3.Init(Colors.Green, 0, 5, 0.5f);
-		Meteor m4 = Instantiate(meteorPrefab, new Vector2(-1, 0) * 5, Quaternion.identity);
+		Meteor m4 = Instantiate(meteorPrefab, new Vector2(-1.5f, 0) * 5, Quaternion.identity);
 		m4.Init(Colors.Yellow, 180, 5, 0.5f);
 
 		yield return new WaitForSeconds(1f);

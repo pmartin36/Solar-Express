@@ -15,11 +15,12 @@ public class TouchController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.touchCount > 0) {
+		var fp = (GameManager.Instance.ContextManager as LevelManager).FingerParticles;
+		if (Input.touchCount > 0) {
 			Touch t = Input.GetTouch(0);
 
 			Vector2 touchPosition = t.position;
-			touchPosition = Camera.main.ScreenToWorldPoint(new Vector3(touchPosition.x, touchPosition.y, Camera.main.transform.position.z));
+			touchPosition = Camera.main.ScreenToWorldPoint(new Vector3(touchPosition.x, touchPosition.y, Camera.main.transform.position.z));			
 
 			float angleDiff = 0;
 			if(touchDown) {
@@ -34,8 +35,10 @@ public class TouchController : MonoBehaviour {
 				touchDownAngle *= -Mathf.Sign(Vector3.Cross(Vector3.right, touchPosition).z);
 				touchDown = true;
 				playerStartAngle = (GameManager.Instance.ContextManager as LevelManager).PlayerShip.transform.localRotation.eulerAngles.z;
+				fp.gameObject.SetActive(true);
 			}
 			angleDiff += playerStartAngle;
+			fp.transform.position = touchPosition;
 
 			(GameManager.Instance.ContextManager as LevelManager).ProcessInputs(new InputPackage() {
 				AngleDiff = angleDiff,
@@ -44,6 +47,7 @@ public class TouchController : MonoBehaviour {
 		}
 		else {
 			touchDown = false;
+			fp.gameObject.SetActive(false);
 		}
 	}
 	

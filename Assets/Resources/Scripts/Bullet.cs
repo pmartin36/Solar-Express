@@ -66,9 +66,9 @@ public class Bullet : Damager {
 	}
 
 	// Update is called once per frame
-	protected override void Update () {
+	protected override void FixedUpdate () {
 		if(!Charging)
-			transform.position += Movement * Time.deltaTime;
+			transform.position += Movement * Time.fixedDeltaTime;
 	}
 
 	public void StartCharging() {
@@ -89,6 +89,7 @@ public class Bullet : Damager {
 		}
 
 		Charging = false;
+		GetComponent<Animator>().SetBool("Launched", true);
 		dust.Emit(20);
 	}
 

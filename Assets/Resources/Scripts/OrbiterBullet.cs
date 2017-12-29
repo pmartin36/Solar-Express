@@ -45,7 +45,7 @@ public class OrbiterBullet : Damager {
 	}
 
 	// Update is called once per frame
-	protected void FixedUpdate() {
+	protected virtual void FixedUpdate() {
 		transform.position += Movement * Time.fixedDeltaTime;
 	}
 

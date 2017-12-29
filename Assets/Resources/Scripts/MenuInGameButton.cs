@@ -48,11 +48,11 @@ public class MenuInGameButton : InGameButtons {
 				break;
 			case InGameMenuButtons.LevelSelect:
 				GameManager.Instance.TransitioningToHome = false;
-				GameManager.Instance.SwitchLevels(1);
+				GameManager.Instance.SwitchLevels(Utils.MenuScene);
 				break;
 			case InGameMenuButtons.Menu:
 				GameManager.Instance.TransitioningToHome = true;
-				GameManager.Instance.SwitchLevels(1);
+				GameManager.Instance.SwitchLevels(Utils.MenuScene);
 				break;
 			case InGameMenuButtons.NextLevel:
 

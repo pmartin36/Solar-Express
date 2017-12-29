@@ -164,6 +164,8 @@
     <Compile Include="Assets\Resources\Scripts\Singleton.cs" />
     <Compile Include="Assets\Resources\Scripts\SoundInGameButton.cs" />
     <Compile Include="Assets\Resources\Scripts\Spin.cs" />
+    <Compile Include="Assets\Resources\Scripts\StoryCore.cs" />
+    <Compile Include="Assets\Resources\Scripts\StoryPanel.cs" />
     <Compile Include="Assets\Resources\Scripts\TestRotateAround.cs" />
     <Compile Include="Assets\Resources\Scripts\TouchController.cs" />
     <Compile Include="Assets\Resources\Scripts\UpgradeButton.cs" />

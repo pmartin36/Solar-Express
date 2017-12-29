@@ -26,6 +26,7 @@ TagManager:
   - LoadingScreen
   - PlanetRing
   - Scrolling Star Particle
+  - Popup
   layers:
   - Default
   - TransparentFX

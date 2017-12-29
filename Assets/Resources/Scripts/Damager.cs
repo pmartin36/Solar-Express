@@ -17,6 +17,10 @@ public class Damager : MonoBehaviour {
 		
 	}
 
+	protected virtual void FixedUpdate() {
+
+	}
+
 	public virtual void Init() {
 
 	}

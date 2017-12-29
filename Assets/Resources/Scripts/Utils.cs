@@ -9,6 +9,13 @@ public enum GameModes { Campaign, Endless, Beamium }
 
 class Utils {
 
+	public readonly static int MenuScene = 0;
+	public readonly static int StoryScene = 1;
+
+	public static int LevelSceneFromLevel(int levelNum) {
+		return levelNum+2;
+	}
+
 	public static Color GetColorFromGameColor(Colors gameColor) {
 		switch (gameColor) {
 			default:
