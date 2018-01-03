@@ -9,6 +9,8 @@ public class Ship : MonoBehaviour {
 	Core core;
 	Shield[] shields;
 
+	SpriteRenderer ShipTrail;
+
 	public SpriteRenderer Cracks {
 		get {
 			return core.GetComponentsInChildren<SpriteRenderer>().First(s => s.gameObject != core.gameObject);
@@ -20,6 +22,9 @@ public class Ship : MonoBehaviour {
 		transform.localScale = Vector2.one * 0.01f;
 		core = GetComponentInChildren<Core>();
 		shields = GetComponentsInChildren<Shield>();
+
+		ShipTrail = GameObject.FindGameObjectWithTag("ShipTrail").GetComponent<SpriteRenderer>();
+		ShipTrail.transform.localScale = Vector2.one * 0.01f;
 	}
 
 	public void Rotate(InputPackage r) {
@@ -42,11 +47,33 @@ public class Ship : MonoBehaviour {
 		List<Shield> shields = GetComponentsInChildren<Shield>().ToList();
 		List<Vector3> shieldPositions = shields.Select( s => s.transform.localPosition ).ToList();
 
+		Vector2 trailStart, trailEnd;
+		Color trailStartAlpha, trailEndAlpha;
+		if (end.sqrMagnitude > start.sqrMagnitude) {
+			trailStart = Vector2.one * 0.01f;
+			trailEnd = Vector2.one * 1.2f;
+
+			trailStartAlpha = new Color(1,1,1,0.15f);
+			trailEndAlpha = new Color(1,1,1,0.2f);
+		}
+		else {
+			trailEnd = Vector2.one * 0.01f;
+			trailStart = Vector2.one * 1.2f;
+
+			trailEndAlpha = new Color(1, 1, 1, 0.15f);
+			trailStartAlpha = new Color(1, 1, 1, 0.2f);
+		}
+
+
 		while( Time.time - starttime < ttime + Time.deltaTime) {
-			transform.localScale = Vector2.Lerp(start, end, (Time.time - starttime) / ttime);
+			float jtime = (Time.time - starttime) / ttime;
+			transform.localScale = Vector2.Lerp(start, end, jtime);
+			ShipTrail.transform.localScale = Vector3.Lerp( trailStart, trailEnd, jtime);
+
+			ShipTrail.color = Color.Lerp( trailStartAlpha, trailEndAlpha, jtime);
 
 			//fixing a bug where shield positions would round to 0 and stay there
-			for(int i = 0; i < shields.Count; i++) {
+			for (int i = 0; i < shields.Count; i++) {
 				shields[i].transform.localPosition = shieldPositions[i];
 			}
 

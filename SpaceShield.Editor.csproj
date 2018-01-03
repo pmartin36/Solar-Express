@@ -170,6 +170,13 @@
     <Compile Include="Assets\Libraries\PostProcessing\Editor\Utils\ReflectionUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Libraries\GlowingObjectOutlines-master\Assets\Resources\Blur.shader" />
+    <None Include="Assets\Libraries\GlowingObjectOutlines-master\Assets\Resources\GlowCmdShader.shader" />
+    <None Include="Assets\Libraries\GlowingObjectOutlines-master\Assets\Resources\GlowComposite.shader" />
+    <None Include="Assets\Libraries\GlowingObjectOutlines-master\Assets\Resources\GlowReplace.shader" />
+    <None Include="Assets\Libraries\GlowingObjectOutlines-master\Assets\Resources\Sprites-Glowable.shader" />
+    <None Include="Assets\Libraries\GlowingObjectOutlines-master\Assets\Resources\Standard-Glow.shader" />
+    <None Include="Assets\Libraries\GlowingObjectOutlines-master\ProjectSettings\ProjectVersion.txt" />
     <None Include="Assets\Libraries\Golden Demo\Golden.shader" />
     <None Include="Assets\Libraries\PostProcessing\Editor Resources\Monitors\HistogramCompute.compute" />
     <None Include="Assets\Libraries\PostProcessing\Editor Resources\Monitors\HistogramRender.shader" />
@@ -215,6 +222,7 @@
     <None Include="Assets\Resources\Shaders\Bullet.shader" />
     <None Include="Assets\Resources\Shaders\DistFromCenter.shader" />
     <None Include="Assets\Resources\Shaders\LevelFailDistort.shader" />
+    <None Include="Assets\Resources\Shaders\Logo.shader" />
     <None Include="Assets\Resources\Shaders\Shield.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-Beam.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-Bullet2.shader" />
@@ -235,7 +243,10 @@
     <None Include="Assets\Resources\Shaders\Sprites-OrbitingGun.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-PointBeam.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-PopupBorder.shader" />
+    <None Include="Assets\Resources\Shaders\Sprites-ShipTrail.shader" />
+    <None Include="Assets\Resources\Shaders\Sprites-ShipTrail2.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-UpgradeButton.shader" />
+    <None Include="Assets\Resources\Shaders\StoryTalkingSun.shader" />
     <None Include="Assets\TextMesh Pro\Fonts\Anton OFL.txt" />
     <None Include="Assets\TextMesh Pro\Fonts\Bangers - OFL.txt" />
     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />

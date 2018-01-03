@@ -72,7 +72,7 @@ public class LevelSuccessMenu : MonoBehaviour {
 		}
 
 		//count points and show stars achieved
-		int score = 35000;//(GameManager.Instance.ContextManager as LevelManager).PointManager.Points;
+		int score = (int)(GameManager.Instance.ContextManager as LevelManager).PointManager.Points;
 		startTime = Time.time;
 		ttime = 5f;
 		while (Time.time - startTime < ttime + Time.deltaTime) {

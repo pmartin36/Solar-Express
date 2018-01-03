@@ -12,18 +12,32 @@ public class CameraController : MonoBehaviour {
 	Animator anim;
 
 	public Material PostMaterial;
+	float perlinSeedX, perlinSeedY;
 
 	// Use this for initialization
 	void Start () {
 		GameManager.Instance.MainCameraController = this;
 		anim = GetComponent<Animator>();
 		shakeDampening = 25f;
+
+		/*
+		UnityEngine.Random.InitState((int)DateTime.Now.Ticks);
+		perlinSeedX = UnityEngine.Random.value * 1000;
+		perlinSeedY = UnityEngine.Random.value * 1000;
+		*/
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		/*
+		float offsetX = (Mathf.PerlinNoise(Time.time/4f + perlinSeedX, 0) * 2 - 1) * 0.25f;
+		float offsetY = (Mathf.PerlinNoise(0, Time.time/4f + perlinSeedY) * 2 - 1) * 0.25f;
+		transform.position = new Vector3(offsetX,offsetY,-10);
+		*/
+		transform.position = Vector2.zero;
+
 		Vector3 shake = shakeDirection * shakeMagnitude / shakeDampening;
-		transform.position = new Vector3(shake.x, shake.y, -10);
+		transform.position += new Vector3(shake.x, shake.y, -10);
 	}
 
 	public void Shake(Vector3 direction) {

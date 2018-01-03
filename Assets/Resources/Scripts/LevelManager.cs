@@ -143,6 +143,7 @@ public class LevelManager : ContextManager {
 		SpriteRenderer cracks = PlayerShip.Cracks;
 		float ttime = 3f;
 		float startTime = Time.time;
+
 		while (Time.time - startTime < ttime) {
 			float jTime = (Time.time - startTime) / ttime;
 			cracks.material.SetFloat("_Cutoff", 0.6f * jTime);
@@ -154,7 +155,7 @@ public class LevelManager : ContextManager {
 			yield return new WaitForEndOfFrame();
 		}
 
-		if(!LevelFail.gameObject.activeInHierarchy) {
+		if (!LevelFail.gameObject.activeInHierarchy) {
 			LevelFail.gameObject.SetActive(true);
 		}
 	}
@@ -191,6 +192,7 @@ public class LevelManager : ContextManager {
 	}
 
 	IEnumerator SpawnLevel() {
+		/*
 		Meteor m = Instantiate(meteorPrefab, new Vector2(0, 1.5f) * 5, Quaternion.identity);
 		m.Init(Colors.Blue, 90, 5, 0.5f);
 		Meteor m2 = Instantiate(meteorPrefab, new Vector2(0, -1.5f) * 5, Quaternion.identity);
@@ -214,23 +216,15 @@ public class LevelManager : ContextManager {
 		OrbitingEnemy o = Instantiate(orbiterPrefab, new Vector2(-5f, -2f), Quaternion.identity);
 		o.Init(Colors.Yellow);
 
-		//OrbitingEnemy o2 = Instantiate(orbiterPrefab, new Vector2(0, -7f), Quaternion.identity);
-		//o2.Init(Colors.Blue, angle: 90);
-
 		yield return new WaitForSeconds(2f);
 
 		LaserShip es = Instantiate(enemyShipPrefab);
 		es.Init(4, startRotation: 135, numberOfShots: 2, rotationBetweenShots: 0, color: Colors.Red);
 
 		yield return new WaitForSeconds(1f);
+		*/
 
-		//LaserShip es2 = Instantiate(enemyShipPrefab);
-		//es2.Init(3, startRotation: 180, numberOfShots: 1, rotationBetweenShots: 0,  color: Colors.Green);
-
-		//yield return new WaitForSeconds(1f);
-
-		//LaserShip es3 = Instantiate(enemyShipPrefab);
-		//es3.Init(3, startRotation: 90, numberOfShots: 2, rotationBetweenShots: 0, timeBtwShots: 4f, color: Colors.Blue);
+		yield return new WaitForSeconds(10f);
 
 		yield return new WaitForSeconds(15f);
 		BeginEndLevel();

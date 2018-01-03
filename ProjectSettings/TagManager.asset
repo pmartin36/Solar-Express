@@ -27,6 +27,7 @@ TagManager:
   - PlanetRing
   - Scrolling Star Particle
   - Popup
+  - ShipTrail
   layers:
   - Default
   - TransparentFX
