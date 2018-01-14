@@ -132,6 +132,7 @@
     <Compile Include="Assets\Libraries\PostProcessing\Runtime\Utils\MaterialFactory.cs" />
     <Compile Include="Assets\Libraries\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
     <Compile Include="Assets\Libraries\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
+    <Compile Include="Assets\Resources\Scripts\AudioSourceWrapper.cs" />
     <Compile Include="Assets\Resources\Scripts\Bullet.cs" />
     <Compile Include="Assets\Resources\Scripts\CameraController.cs" />
     <Compile Include="Assets\Resources\Scripts\ContextManager.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="Assets\Resources\Scripts\MenuManager.cs" />
     <Compile Include="Assets\Resources\Scripts\MeshGen.cs" />
     <Compile Include="Assets\Resources\Scripts\Meteor.cs" />
+    <Compile Include="Assets\Resources\Scripts\MusicManager.cs" />
     <Compile Include="Assets\Resources\Scripts\OrbiterBullet.cs" />
     <Compile Include="Assets\Resources\Scripts\OrbiterBulletRing.cs" />
     <Compile Include="Assets\Resources\Scripts\OrbitingEnemy.cs" />

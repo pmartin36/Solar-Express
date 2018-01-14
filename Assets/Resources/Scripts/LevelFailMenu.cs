@@ -20,6 +20,8 @@ public class LevelFailMenu : MonoBehaviour {
 	TMP_Text MissionFailedText;
 	public float ButtonAlpha;
 
+	private AudioSource audio;
+
 	// Use this for initialization
 	void Start () {
 		image = image ?? GetComponent<Image>();
@@ -29,6 +31,16 @@ public class LevelFailMenu : MonoBehaviour {
 		MissionFailedText = GetComponentsInChildren<TMP_Text>().First( t => t.tag == "MissionStatusText");
 
 		UpdateVals();
+
+		audio = GetComponent<AudioSource>();
+		GameManager.Instance.ContextManager.AddAudioSource(audio);
+		if(GameManager.Instance.PlayerInfo.SoundOn) {
+			GameManager.Instance.ContextManager.MuteAudioSources();
+			audio.mute = false;
+		}
+		else {
+			audio.mute = true;
+		}
 	}
 
 	private void UpdateVals() {

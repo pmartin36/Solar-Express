@@ -15,6 +15,7 @@ public class StoryPanel : MonoBehaviour {
 	private Image Border;
 
 	bool NextDialog;
+	private AudioSource audio;
 
 	// Use this for initialization
 	void Start () {
@@ -28,6 +29,9 @@ public class StoryPanel : MonoBehaviour {
 		Border = GameObject.FindGameObjectWithTag("Popup").GetComponent<Image>();
 
 		GameManager.Instance.FirstTimePlaying = false;
+
+		audio = GetComponent<AudioSource>();
+		audio.mute = !GameManager.Instance.PlayerInfo.SoundOn;
 
 		StartCoroutine(Action());
 	}
@@ -134,7 +138,8 @@ public class StoryPanel : MonoBehaviour {
 	}
 
 	IEnumerator Action() {
-		yield return StartCoroutine(TransitionImageSerial(new [] { TalkingSun, Border }, Color.clear, new Color(1,1,1,0.4f), 2f));
+		StartCoroutine(TransitionImageSerial(new [] { TalkingSun }, Color.clear, new Color(1,1,1,0.4f), 2f));
+		yield return StartCoroutine(TransitionImageSerial(new[] { Border }, Color.clear, Color.white, 2f));
 
 		var dialogPieces = new [] {
 			"Welcome to the Sun. I am the Essence of Color. Thank you for your quick response.",
@@ -157,6 +162,20 @@ public class StoryPanel : MonoBehaviour {
 			yield return new WaitUntil(() => NextDialog);
 			NextDialog = false;
 			NextButton.interactable = false;
+		}
+
+		float startTime = Time.time;
+		float volume = audio.volume;
+		Color startColor = Dialog.color;
+		StoryCore core = GetComponentInChildren<StoryCore>();
+
+		StartCoroutine(TransitionImageSerial(new [] { TalkingSun, Border }, Color.white, Color.clear, 1f));
+		core.Despawn();
+		while(Time.time - startTime < 1f + Time.deltaTime) {
+			float time = (Time.time - startTime);
+			audio.volume = Mathf.Lerp(volume, 0, time);
+			Dialog.color = Color.Lerp(startColor, Color.clear, time);
+			yield return new WaitForEndOfFrame();
 		}
 
 		GameManager.Instance.TransitioningToHome = false;

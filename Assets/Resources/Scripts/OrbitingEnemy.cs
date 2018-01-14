@@ -79,7 +79,8 @@ public class OrbitingEnemy : MonoBehaviour {
 
 		ChargeAmount = 0f;
 		gunSpriteRenderer.material.SetColor("_DetailColor", color);
-
+		
+		angle += 180;
 		transform.localRotation = Quaternion.Euler(0, 0, angle);
 		Movement = Utils.AngleToVector(angle) * moveSpeed;
 	}
@@ -142,7 +143,7 @@ public class OrbitingEnemy : MonoBehaviour {
 						StartCoroutine(Fire());
 						sight.enabled = false;
 					}
-					else {
+					else if(!despawnBegan) {
 						sight.transform.position = hit.point;
 					}
 				}
@@ -165,6 +166,7 @@ public class OrbitingEnemy : MonoBehaviour {
 		}
 
 		gunSpriteRenderer.transform.rotation = Quaternion.Euler(0, 0, angle - 90);
+
 	}
 
 	IEnumerator Despawn() {
@@ -224,6 +226,7 @@ public class OrbitingEnemy : MonoBehaviour {
 
 	IEnumerator Fire() {
 		ChargeAmount = 0f;
+
 		yield return new WaitForEndOfFrame();
 		anim.Play("pushback");
 	}

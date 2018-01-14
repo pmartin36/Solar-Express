@@ -16,6 +16,10 @@ public class Shield : MonoBehaviour {
 	SpriteRenderer spriteRenderer;
 	PolygonCollider2D polycollider;
 
+	private static float lastShieldHitTime = 0;
+	private static float lastShieldHitPitch = 0.95f;
+	private AudioSource audio;
+
 	// Use this for initialization
 	void Start () {
 		ringColor = new List<Color>() { Color.white, Color.white };
@@ -24,6 +28,10 @@ public class Shield : MonoBehaviour {
 
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		polycollider = GetComponent<PolygonCollider2D>();
+
+		audio = GetComponent<AudioSource>();
+		GameManager.Instance.ContextManager.AddAudioSource(audio);
+		audio.mute = !GameManager.Instance.PlayerInfo.SoundOn;
 	}
 	
 	// Update is called once per frame
@@ -89,7 +97,7 @@ public class Shield : MonoBehaviour {
 		Disabled = disabled;
 
 		Color c = spriteRenderer.color;
-		c.a = disabled ? 0.0f : 1f;
+		c.a = disabled ? 0.3f : 1f;
 		spriteRenderer.color = c;
 
 		polycollider.enabled = !disabled;
@@ -98,9 +106,18 @@ public class Shield : MonoBehaviour {
 	IEnumerator Disable() {
 		ToggleDisabled(true);
 
-		yield return new WaitForSeconds(5f);
+		yield return new WaitForSeconds(4.5f);
 
-		ToggleDisabled(false);
+		float startTime = Time.time;
+		float jTime = 0.5f;
+		while( Time.time - startTime < jTime + Time.deltaTime ) {
+			Color c = spriteRenderer.color;
+			c.a = Mathf.Lerp(0.3f, 1, (Time.time - startTime) / jTime);
+			spriteRenderer.color = c;
+			yield return new WaitForEndOfFrame();
+		}
+		Disabled = false;
+		polycollider.enabled = true;
 	}
 
 	public void SetColliderActive(bool active) {
@@ -108,7 +125,16 @@ public class Shield : MonoBehaviour {
 	}
 
 	IEnumerator HitShield(Color c, int index, float animationDuration) {
-		//ringColor[index] = c;
+		if(Time.time - lastShieldHitTime > 5f) {
+			lastShieldHitPitch = 0.9f;
+		}
+		else {
+			lastShieldHitPitch = Mathf.Min(1.3f, lastShieldHitPitch + 0.05f);
+		}
+		lastShieldHitTime = Time.time;
+		audio.pitch = lastShieldHitPitch;
+		audio.Play();
+		
 
 		float startTime = Time.time;
 		float halfduration = animationDuration/2f;

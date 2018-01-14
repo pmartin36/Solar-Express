@@ -20,11 +20,12 @@ public class EMP : MonoBehaviour {
 	public static Canvas EMPTextCanvas;
 	public static EMPExplosion explosionPrefab;
 
+	private AudioSource audio;
+
 	ParticleSystem ps;
 
 	// Use this for initialization
 	void Start () {
-		
 	}
 
 	public void Init(Colors c, int detonationTime = 3) {
@@ -73,13 +74,17 @@ public class EMP : MonoBehaviour {
 
 		ps = GetComponentInChildren<ParticleSystem>();
 		var main = ps.main;
-		main.startColor = Color.clear;
+		//main.startColor = Color.clear;
 
 		StartCoroutine(Action());
 
 		Vector2 camSize = new Vector2(Camera.main.orthographicSize * Camera.main.aspect, Camera.main.orthographicSize);
 		Vector2 canvasSize = new Vector2(136/2f, 205/2f);
 		conversion = new Vector2(canvasSize.x/camSize.x, canvasSize.y/camSize.y);
+
+		audio = GetComponent<AudioSource>();
+		GameManager.Instance.ContextManager.AddAudioSource(audio);
+		audio.mute = !GameManager.Instance.PlayerInfo.SoundOn;
 	}
 
 	// Update is called once per frame
@@ -88,7 +93,11 @@ public class EMP : MonoBehaviour {
 	}
 
 	private void UpdateTimer(int c) {
-		text.text = (TimeToDetonation - c).ToString();
+		string newText = (TimeToDetonation - c).ToString();
+		if(newText != text.text) {
+			audio.Play();
+		}
+		text.text = newText;
 	}
 
 	private IEnumerator Action() {
@@ -100,12 +109,15 @@ public class EMP : MonoBehaviour {
 			float jTime = (Time.time - startTime) / spawnTime;
 			Color lerpcolor = Color.Lerp(Color.clear, Color.white, jTime);
 
-			main.startColor = lerpcolor;
+			//main.startColor = lerpcolor;
 			text.color = lerpcolor;
 			spriteRenderer.material.SetFloat("_Cutoff", Mathf.Lerp(0.75f, 0, jTime));
 
 			yield return new WaitForEndOfFrame();
 		}
+
+		//play countdown on spawn
+		audio.Play();
 
 		//countdown
 		int c = 0;
@@ -122,6 +134,8 @@ public class EMP : MonoBehaviour {
 		//detonate
 		EMPExplosion explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
 		explosion.Init(GameColor, color);
+
+		GameManager.Instance.ContextManager.RemoveAudioSource(audio);
 
 		Destroy(text.gameObject);
 		Destroy(this.gameObject);

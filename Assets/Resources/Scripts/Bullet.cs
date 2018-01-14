@@ -15,6 +15,8 @@ public class Bullet : Damager {
 	public float ShieldAnimationTime;
 
 	private Color color;
+	private AudioSource audio;
+	public AudioClip fireSound;
 
 	// Use this for initialization
 	protected override void Start () {
@@ -34,6 +36,10 @@ public class Bullet : Damager {
 		main.startColor = new ParticleSystem.MinMaxGradient(Color.white, color);
 
 		dust = ps.First(p => !p.main.loop);
+
+		audio = GetComponent<AudioSource>();
+		GameManager.Instance.ContextManager.AddAudioSource(audio);
+		audio.mute = !GameManager.Instance.PlayerInfo.SoundOn;
 	}
 	
 	public void Init(LaserShip ship, float direction, float speed) {
@@ -73,6 +79,7 @@ public class Bullet : Damager {
 
 	public void StartCharging() {
 		StartCoroutine(Fire());
+		audio.Play();
 	}
 
 	IEnumerator Fire() {
@@ -90,6 +97,8 @@ public class Bullet : Damager {
 
 		Charging = false;
 		GetComponent<Animator>().SetBool("Launched", true);
+		//audio.clip = fireSound;
+		//audio.Play();
 		dust.Emit(20);
 	}
 
@@ -106,6 +115,7 @@ public class Bullet : Damager {
 		spriteRenderer.enabled = false;
 		yield return new WaitForSeconds(1f);
 
+		GameManager.Instance.ContextManager.RemoveAudioSource(audio);
 		Destroy(this.gameObject);
 	}
 }

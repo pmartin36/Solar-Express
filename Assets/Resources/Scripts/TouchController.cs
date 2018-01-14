@@ -8,9 +8,12 @@ public class TouchController : MonoBehaviour {
 	bool touchDown;
 	float playerStartAngle;
 
+	ParticleSystem.EmissionModule fp_em;
+
 	// Use this for initialization
 	void Start () {
 		Input.multiTouchEnabled = false;
+		fp_em = (GameManager.Instance.ContextManager as LevelManager).FingerParticles.emission;
 	}
 	
 	// Update is called once per frame
@@ -35,7 +38,8 @@ public class TouchController : MonoBehaviour {
 				touchDownAngle *= -Mathf.Sign(Vector3.Cross(Vector3.right, touchPosition).z);
 				touchDown = true;
 				playerStartAngle = (GameManager.Instance.ContextManager as LevelManager).PlayerShip.transform.localRotation.eulerAngles.z;
-				fp.gameObject.SetActive(true);
+				//fp.gameObject.SetActive(true);
+				fp_em.enabled = true;
 			}
 			angleDiff += playerStartAngle;
 			fp.transform.position = touchPosition;
@@ -47,7 +51,8 @@ public class TouchController : MonoBehaviour {
 		}
 		else {
 			touchDown = false;
-			fp.gameObject.SetActive(false);
+			//fp.gameObject.SetActive(false);
+			fp_em.enabled = false;
 		}
 	}
 	

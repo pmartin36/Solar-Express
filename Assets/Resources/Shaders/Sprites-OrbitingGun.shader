@@ -86,20 +86,9 @@ Shader "Sprites/OrbitingGun"
 				fixed4 d = tex2D(_DetailTex, IN.texcoord);
 				fixed4 c = tex2D(_MainTex, IN.texcoord) * IN.color;
 
-				/*
-				float ratio = saturate(d.a * ceil(_Cutoff-d.g));
-				float4 dcolor = _DetailColor;
-				dcolor.rgb *= _DetailColor.a / 2 + 0.5;
-
-				
-				return (dcolor * d.r * ratio) + (1 - ratio) * c;
-				*/
-
-				float cutoff = ceil(d.a) * ceil(_Cutoff - d.g);
-
-				fixed4 dcolor = _DetailColor * cutoff;
-
-				return (dcolor.a * dcolor * d.r * d.a) + (1-dcolor.a) * c;
+				float cutoff = ceil(_Cutoff - d.g);
+				fixed4 dcolor = _DetailColor * cutoff * d.a;
+				return (dcolor) + (1-dcolor.a)*c;
 			}
 		ENDCG
 		}

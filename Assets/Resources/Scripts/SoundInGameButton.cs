@@ -21,7 +21,7 @@ public class SoundInGameButton : InGameButtons {
 	}
 
 	public override void onTouch() {
-		GameManager.Instance.PlayerInfo.SoundOn = !GameManager.Instance.PlayerInfo.SoundOn;
+		GameManager.Instance.ToggleSoundOn();
 		SetSprite();
 	}
 }

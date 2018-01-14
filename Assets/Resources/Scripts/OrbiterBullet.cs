@@ -8,6 +8,8 @@ public class OrbiterBullet : Damager {
 
 	private ParticleSystem particleSystem;
 
+	private AudioSource audio;
+
 	// Use this for initialization
 	protected override void Start() {
 		Color c = Utils.GetColorFromGameColor(GameColor);
@@ -20,6 +22,10 @@ public class OrbiterBullet : Damager {
 		//trailRenderer.startColor = trailRenderer.endColor = Color.white;//Utils.GetColorFromGameColor(GameColor);
 
 		//StartCoroutine(Fire());
+
+		audio = GetComponent<AudioSource>();
+		GameManager.Instance.ContextManager.AddAudioSource(audio);
+		audio.mute = !GameManager.Instance.PlayerInfo.SoundOn;
 	}
 
 
@@ -41,6 +47,7 @@ public class OrbiterBullet : Damager {
 
 	public IEnumerator DestroyAfterSeconds() {
 		yield return new WaitForSeconds(2f);
+		GameManager.Instance.ContextManager.RemoveAudioSource(audio);
 		Destroy(this.gameObject);
 	}
 

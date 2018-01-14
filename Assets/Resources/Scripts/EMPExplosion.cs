@@ -17,12 +17,17 @@ public class EMPExplosion : MonoBehaviour {
 	//public Sprite[] sprites;
 
 	public bool TestObject;
+	private AudioSource audio;
 
 	// Use this for initialization
 	void Start () {
 		if(TestObject) {
 			Init(GameColor, new Color(0.5f,0.0f,0));
 		}
+
+		audio = GetComponent<AudioSource>();
+		GameManager.Instance.ContextManager.AddAudioSource(audio);
+		audio.mute = !GameManager.Instance.PlayerInfo.SoundOn;
 	}
 
 	public void Init(Colors c, Color secondary) {
@@ -53,7 +58,6 @@ public class EMPExplosion : MonoBehaviour {
 		circleCollider.radius = 0f;
 
 		UpdateExplosion();
-		StartCoroutine(Action());
 	}
 	
 	// Update is called once per frame
@@ -73,42 +77,13 @@ public class EMPExplosion : MonoBehaviour {
 		centerSpriteRenderer.material.SetFloat("_AlphaModifier", AlphaModifier + 0.5f);
 	}
 
-	IEnumerator Action(){
-		yield return new WaitForSeconds(1.1f);
-
-		/*
-		float jTime = 4f / sprites.Length;
-		int transitioningToIndex = 0;
-
-		while (transitioningToIndex < sprites.Length) {
-			centerSpriteRenderer.material.SetFloat("_TexTransition", 0);
-			var newsprite = sprites[transitioningToIndex];
-			var newtexture = new Texture2D( (int)newsprite.textureRect.width, (int)newsprite.textureRect.height );
-			Debug.Log(newsprite.textureRect);
-			newtexture.SetPixels(
-				newsprite.texture.GetPixels(
-					(int)newsprite.textureRect.x,
-					(int)newsprite.textureRect.y,
-					(int)newsprite.textureRect.width,
-					(int)newsprite.textureRect.height
-				)
-			);
-			newtexture.Apply();
-			centerSpriteRenderer.material.SetTexture("_TargetTex", newtexture);
-			float startTime = Time.time;
-			while (Time.time - startTime < jTime + Time.deltaTime) {
-				float transition = (Time.time - startTime) / jTime;
-				centerSpriteRenderer.material.SetFloat("_TexTransition", transition );
-				yield return new WaitForEndOfFrame();
-			}						
-			centerSpriteRenderer.sprite = sprites[transitioningToIndex];
-			transitioningToIndex++;		
-		}
-			
-		yield return new WaitForSeconds(jTime);
-		*/
-
-		Destroy(this.gameObject);
+	public void PlaySound() {
+		if( audio != null)
+			audio.Play();
 	}
 
+	public void Destroy() {
+		GameManager.Instance.ContextManager.RemoveAudioSource(audio);
+		Destroy(this.gameObject);
+	}
 }

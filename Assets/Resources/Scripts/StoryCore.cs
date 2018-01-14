@@ -34,6 +34,10 @@ public class StoryCore : MonoBehaviour {
 		StartCoroutine(Shields());
 	}
 
+	public void Despawn() {
+		StartCoroutine(DespawnAll());
+	}
+
 	IEnumerator TransitionImageSerial(Image[] images, Color start, Color end, float jTime) {
 		float startTime = Time.time;
 		while ((Time.time - startTime) < jTime + Time.deltaTime) {
@@ -65,5 +69,9 @@ public class StoryCore : MonoBehaviour {
 		shields.color = Color.white;
 		yield return TransitionImageSerial(new [] { shieldSpawnEffect }, Color.white, Color.clear, 1.5f);
 		ShieldsSpawned = true;
+	}
+
+	IEnumerator DespawnAll() {
+		yield return TransitionImageSerial(new[] { core, shields }, Color.white, Color.clear, 1f);
 	}
 }

@@ -99,9 +99,10 @@ Shader "Sprites/EMPBomb"
 				fixed4 c = SampleSpriteTexture (IN.texcoord);
 				fixed4 alphaTex = tex2D(_AlphaCutoffTex, IN.texcoord/2);
 
-
+				float dist = distance(IN.texcoord, float2(0.5, 0.5));
 				float angle = VectorToAngle(IN.texcoord);
-				c.a *= ceil(alphaTex.r - _Cutoff);
+				//c.a *= saturate(ceil(alphaTex.r - _Cutoff) + (.7-dist));
+				c.a *= saturate((0.81 - _Cutoff) + (0.7 - (dist*alphaTex.r)));
 
 				if (angle < _Angle) {
 					c *= _Color;

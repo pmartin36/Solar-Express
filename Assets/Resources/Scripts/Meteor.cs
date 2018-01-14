@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class Meteor : Damager {
 
 	private ParticleSystem particleSystem;
@@ -9,12 +10,16 @@ public class Meteor : Damager {
 
 	public ParticleSystem collisionParticles;
 
+	private AudioSource audio;
+	private bool playedAudio = false;
+
 	private Color color;
 	private float size;
+	private float startTime;
 
 	// Use this for initialization
 	protected override void Start () {
-		
+		startTime = Time.time;
 	}
 
 	public void Init(Colors c, float angle = 0f, float vel = 5f, float particleSize = 0.5f) {
@@ -31,6 +36,11 @@ public class Meteor : Damager {
 
 		size = particleSize;
 		main.startSize = size;
+
+		audio = GetComponent<AudioSource>();
+		GameManager.Instance.ContextManager.AddAudioSource(audio);
+		audio.mute = !GameManager.Instance.PlayerInfo.SoundOn;
+		audio.loop = true;
 
 		Color replacementColor;
 
@@ -63,6 +73,27 @@ public class Meteor : Damager {
 		col.color = colorGradient;
 	}
 
+	protected override void Update() {
+		base.Update();
+		if( Time.time - startTime > 15f ) {
+			Destroy();
+		}
+
+		float d = (transform.position.magnitude - 1.5f);
+		float dsqr = (transform.position.sqrMagnitude - 2.5f);
+		audio.volume = Mathf.Lerp(0.8f, 0f, d);
+		audio.pitch = Mathf.Lerp(1, 0.5f, d);
+
+		//if (!playedAudio) {
+		//	float currentsqr = transform.position.sqrMagnitude;
+		//	float newsqr = (transform.position + Movement * Time.fixedDeltaTime * 10f).sqrMagnitude;
+		//	if (newsqr > currentsqr) {
+		//		audio.Play();
+		//		playedAudio = true;
+		//	}
+		//}		
+	}
+
 	// Update is called once per frame
 	protected override void FixedUpdate () {
 		transform.position += Movement * Time.fixedDeltaTime;
@@ -83,6 +114,7 @@ public class Meteor : Damager {
 	private IEnumerator HitObject() {
 		GetComponent<CircleCollider2D>().enabled = false;
 		Movement = Vector3.zero;
+		audio.Stop();
 
 		var em = particleSystem.emission;
 		em.enabled = false;
@@ -100,6 +132,11 @@ public class Meteor : Damager {
 		ps_emitter.SetBursts(burst);
 
 		yield return new WaitForSeconds(3f);
+		Destroy();
+	}
+
+	private void Destroy() {
+		GameManager.Instance.ContextManager.RemoveAudioSource(audio);
 		Destroy(this.gameObject);
 	}
 }

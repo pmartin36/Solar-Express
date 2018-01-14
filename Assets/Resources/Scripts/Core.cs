@@ -63,6 +63,10 @@ public class Core : MonoBehaviour {
 		Vector3 position = transform.position + 0.75f * direction * transform.localScale.x;
 		GameObject hit = Instantiate(ShipHitPrefab, position, Quaternion.Euler(0,0,Utils.VectorToAngle(direction)+90), this.transform);
 
+		AudioSource hitAudio = hit.GetComponent<AudioSource>();
+		GameManager.Instance.ContextManager.AddAudioSource(hitAudio);
+		hitAudio.mute = !GameManager.Instance.PlayerInfo.SoundOn;
+
 		var explosionps = hit.GetComponentsInChildren<ParticleSystem>();
 
 		var explosion = explosionps.Single(p => !p.main.loop);

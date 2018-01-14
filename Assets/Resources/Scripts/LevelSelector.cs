@@ -5,7 +5,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEditor;
+#if(UNITY_EDITOR)
+	using UnityEditor;
+#endif
 
 public class LevelSelector : ScrollRect {
 
@@ -33,7 +35,9 @@ public class LevelSelector : ScrollRect {
 	// Use this for initialization
 	protected override void Start () {
 		base.Start();
-		if(!EditorApplication.isPlaying) return;
+		#if (UNITY_EDITOR)
+			if (!EditorApplication.isPlaying) return;
+		#endif
 
 		Elements = content.GetComponentsInChildren<LevelSelectElement>().OrderBy(g => g.transform.position.x).ToList();
 		numTiles = GameManager.Instance.PlayerInfo.LevelStars.Count;

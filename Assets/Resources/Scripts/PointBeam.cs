@@ -7,6 +7,8 @@ public class PointBeam : MonoBehaviour {
 
 	public Colors GameColor;
 	private Color color;
+	private float totalLifetime;
+	private float currentLifetime;
 
 	public float BeamDistance;
 	public float BeamWidth;
@@ -20,6 +22,9 @@ public class PointBeam : MonoBehaviour {
 
 	ParticleSystem plusSignParticleSystem;
 	ParticleSystem sparksParticleSystem;
+
+	//private AudioSource audio;
+	float nextPointDing = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -52,6 +57,14 @@ public class PointBeam : MonoBehaviour {
 		beamMeshRenderer.material.SetColor("_CenterColor", centerColor);
 		spriteRenderer.material.SetColor("_ExteriorColor", exteriorColor);
 		spriteRenderer.material.SetColor("_CenterColor", centerColor);
+
+		//audio = GetComponent<AudioSource>();
+	}
+
+	public void Init(Colors color, float lifetime) {
+		GameColor = color;
+		totalLifetime = lifetime;
+		currentLifetime = 0;
 	}
 
 	private void SetSparkParticleProperties(Shield s, Vector2 t) {
@@ -119,33 +132,10 @@ public class PointBeam : MonoBehaviour {
 		em.enabled = gettingPoints;
 
 		/*
-		RaycastHit2D hit = Physics2D.BoxCast(transform.position,
-													new Vector2(BeamWidth, BeamWidth),
-													-zangle,
-													-transform.position,
-													disttocenter,
-													1 << LayerMask.NameToLayer("Shield"));
-
-		var em = plusSignParticleSystem.emission;
-		em.enabled = false;
-		if (hit.collider != null && Vector2.Angle(hit.normal, transform.position) < 20) {
-			Shield s = hit.collider.GetComponent<Shield>();
-			if (s != null) {
-				//display laser beam splash at location on shield
-				//update distance
-				dist = Mathf.Min(dist, Vector2.Distance(transform.position, hit.point) * 1 / transform.localScale.x);
-				SetSparkParticleProperties(s, hit.point);
-
-				if (s.GameColor == GameColor) {
-					//add points
-					(GameManager.Instance.ContextManager as LevelManager).PointManager.IncrementPoints(10, "Point Beam", color);
-					em.enabled = true;
-				}
-			}
-			else if (hit.collider.GetComponent<Core>() != null) {
-				dist = Mathf.Min(dist, Vector2.Distance(transform.position, hit.point) * 1 / transform.localScale.x);
-				SetSparkParticleProperties(null, hit.point);
-			}
+		if(gettingPoints && Time.time > nextPointDing) {
+			audio.Play();
+			audio.volume = Random.Range(0.15f, 0.3f);
+			nextPointDing = Time.time + Random.Range(4,6);
 		}
 		*/
 
@@ -176,5 +166,33 @@ public class PointBeam : MonoBehaviour {
 		m2.triangles = m.triangles;
 		m.RecalculateNormals();
 		shape.mesh = m2;
+
+		currentLifetime += Time.deltaTime;
+		if(currentLifetime >= totalLifetime-2f) {
+			StartCoroutine(Despawn());
+		}
+	}
+
+	IEnumerator Despawn() {
+		float startTime = Time.time;
+		float jTime = 2f;
+
+		Color startExtColor = beamMeshRenderer.material.GetColor("_ExteriorColor");
+		Color startCtColor = beamMeshRenderer.material.GetColor("_CenterColor");
+
+		while(Time.time - startTime < jTime + Time.deltaTime) {
+			float ttime = (Time.time - startTime) / jTime;
+			Color extColor = Color.Lerp(startExtColor, Color.clear, ttime);
+			Color ctColor = Color.Lerp(startCtColor, Color.clear, ttime);
+
+			beamMeshRenderer.material.SetColor("_ExteriorColor", extColor);
+			beamMeshRenderer.material.SetColor("_CenterColor", ctColor);
+			spriteRenderer.material.SetColor("_ExteriorColor", extColor);
+			spriteRenderer.material.SetColor("_CenterColor", ctColor);
+
+			yield return new WaitForEndOfFrame();
+		}
+
+		Destroy(this.gameObject);
 	}
 }

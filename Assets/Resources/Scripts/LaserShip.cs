@@ -20,6 +20,7 @@ public class LaserShip : MonoBehaviour {
 	public Color ShipColor { get; set; }
 
 	private ParticleSystem [] FeedPS;
+	private AudioSource audio;
 
 	public void Init(float endDistFromShip, float startRotation = 0, int numberOfShots = 1, float timeBtwShots = 1f, float rotationBetweenShots = 0, Colors color = Colors.Red) {
 		StartRotation = startRotation;
@@ -51,6 +52,10 @@ public class LaserShip : MonoBehaviour {
 			var main = ps.main;
 			main.startColor = new ParticleSystem.MinMaxGradient(Color.white, ShipColor);
 		}
+
+		audio = GetComponent<AudioSource>();
+		GameManager.Instance.ContextManager.AddAudioSource(audio);
+		audio.mute = !GameManager.Instance.PlayerInfo.SoundOn;
 
 		StartCoroutine(PerformActions());
 	}
@@ -155,6 +160,7 @@ public class LaserShip : MonoBehaviour {
 			yield return new WaitForEndOfFrame();
 		}
 
+		GameManager.Instance.ContextManager.RemoveAudioSource(audio);
 		Destroy(this.gameObject);
 	}
 

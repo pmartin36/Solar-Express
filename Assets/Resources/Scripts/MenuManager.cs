@@ -14,12 +14,32 @@ public class MenuManager : ContextManager {
 	public RectTransform ActivePopupRectTransform;
 
 	public LevelSelector LevelSelector;
+	public AudioClip MenuMusic;
+
+	private AudioSource audio;
+
+	public override void Awake() {
+		base.Awake();
+	}
 
 	// Use this for initialization
 	void Start () {
 		Input.multiTouchEnabled = false;
 		GameManager.Instance.RegisterContextManager(this);	
 		GameManager.Instance.MenuParticles.SetActive(true);
+
+		if(GameManager.Instance.MusicManager != null) {
+			MusicManager m = GameManager.Instance.MusicManager;
+			m.Volume = 0f;
+			if(m.PlayingSong != MenuMusic) {
+				m.SetPlayingSong(MenuMusic);
+			}
+			GameManager.Instance.MusicManager.SetVolumeLevelGradual(0.3f, 1f);
+		}
+
+		audio = GetComponent<AudioSource>();
+		this.AddAudioSource(audio);
+		audio.mute = !GameManager.Instance.PlayerInfo.SoundOn;
 	}
 	
 	public void SetActiveScreen(bool homeActive) {
@@ -34,7 +54,13 @@ public class MenuManager : ContextManager {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.Escape)) {
-			Application.Quit();
+			if(ActivePopup != null) {
+				ActivePopup.gameObject.SetActive(false);
+				ActivePopup = null;
+			}
+			else {
+				Application.Quit();
+			}
 		}
 		
 
@@ -114,6 +140,10 @@ public class MenuManager : ContextManager {
 			b.interactable = false;
 		}
 
+		if (GameManager.Instance.FirstTimePlaying) {
+			GameManager.Instance.MusicManager.SetVolumeLevelGradual(0, ttime);
+		}
+
 		while (Time.time - startTime < ttime + Time.deltaTime) {
 			float jTime = (Time.time - startTime) / ttime;
 			foreach (Button b in homebuttons) {
@@ -152,13 +182,13 @@ public class MenuManager : ContextManager {
 		Vector3 endCameraPosition = new Vector3(0, LevelSelector.transform.position.y+0.04f, -10);
 		Color endColor = new Color(0, 8f/255f, 21f/255f);
 
-		//var ps = GameManager.Instance.MenuParticles.GetComponentsInChildren<ParticleSystem>();
-		//foreach (ParticleSystem p in ps) {
-		//	var em = p.emission;
-		//	em.enabled = false;
-		//}
-
 		Image scrollviewimage = LevelSelector.GetComponent<Image>();
+
+		//stop music, start thruster
+		AudioSource audio = GetComponent<AudioSource>();
+		audio.Play();
+		StartCoroutine(SetVolumeGradual(audio,0));
+		GameManager.Instance.MusicManager.SetVolumeLevelGradual(0f, 2f);
 
 		while (Time.time - startTime < ttime + Time.deltaTime) {
 			float jTime = (Time.time - startTime) / ttime;
@@ -175,28 +205,18 @@ public class MenuManager : ContextManager {
 			yield return new WaitForEndOfFrame();
 		}
 
-		//yield return new WaitForSeconds(0.5f);
-
-		/*
-		while (Time.time - startTime < ttime + Time.deltaTime) {
-			float jTime = (Time.time - startTime) / ttime;
-			float interp = Mathf.Lerp(1, 0, jTime);
-
-			foreach (Button b in lsbuttons) {
-				var bc = b.colors;
-				Color c = bc.disabledColor;
-				c.a = interp;
-				bc.disabledColor = c;
-				b.colors = bc;
-			}
-
-			LevelSelector.SetElementsAlpha(interp);
-
-			yield return new WaitForEndOfFrame();
-		}
-		yield return new WaitForSeconds(1f);
-		*/
 		GameManager.Instance.SwitchLevels(newSceneIndex);
+	}
+
+	IEnumerator SetVolumeGradual(AudioSource audio, float end) {
+		float start = audio.volume;
+		float startTime = Time.time;
+		float time = 2f;
+
+		while (Time.time - startTime < time + 0.1f) {
+			audio.volume = Mathf.Lerp(start, end, (Time.time - startTime) / time);
+			yield return new WaitForSeconds(0.1f);
+		}
 	}
 
 	IEnumerator ToLevelSelect() {	
