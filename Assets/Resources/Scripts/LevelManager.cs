@@ -185,9 +185,9 @@ public class LevelManager : ContextManager {
 
 	IEnumerator EndLevel() {
 		EndingPlanet.Moving = true;
-		yield return new WaitForSeconds(3f);
+		yield return new WaitForSeconds(5f);
 
-		float playerSizeChangeTime = 4f;
+		float playerSizeChangeTime = 5f;
 		PlayerShip.ChangePlayerSize(Vector2.one * 0.75f, Vector2.zero, playerSizeChangeTime);
 		foreach(ParticleSystem ps in PlayerShip.GetComponentsInChildren<ParticleSystem>()) {
 			var psem = ps.emission;
@@ -215,7 +215,6 @@ public class LevelManager : ContextManager {
 	}
 
 	IEnumerator SpawnLevel() {
-
 		Meteor m1 = Instantiate(meteorPrefab, new Vector2(-7.5f, -0.5f), Quaternion.identity);
 		m1.Init(Colors.Blue, 180, 3, 0.5f);
 
@@ -316,22 +315,6 @@ public class LevelManager : ContextManager {
 
 		yield return new WaitForSeconds(9f); //90
 
-		//LaserShip l4 = Instantiate(enemyShipPrefab);
-		//l4.Init(3, startRotation: 0, numberOfShots: 3, timeBtwShots: 4, color: Colors.Red);
-		//yield return new WaitForSeconds(1f);
-
-		//LaserShip l5 = Instantiate(enemyShipPrefab);
-		//l5.Init(4, startRotation: 90, numberOfShots: 3, timeBtwShots: 4, color: Colors.Red);
-		//yield return new WaitForSeconds(1f);
-
-		//LaserShip l6 = Instantiate(enemyShipPrefab);
-		//l6.Init(3, startRotation: 180, numberOfShots: 3, timeBtwShots: 4, color: Colors.Red);
-		//yield return new WaitForSeconds(1f);
-
-		//LaserShip l7 = Instantiate(enemyShipPrefab);
-		//l7.Init(4, startRotation: 270, numberOfShots: 3, timeBtwShots: 4, color: Colors.Red);
-
-		//yield return new WaitForSeconds(15f);
 		BeginEndLevel();
 	}
 

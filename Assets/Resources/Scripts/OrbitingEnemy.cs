@@ -66,6 +66,8 @@ public class OrbitingEnemy : MonoBehaviour {
 
 		MoveSpeed = moveSpeed;
 
+		angle += 180;
+
 		engineParticles = GetComponentInChildren<ParticleSystem>();
 		var main = engineParticles.main;
 		main.startRotation = (180-angle)*Mathf.Deg2Rad;
@@ -79,8 +81,7 @@ public class OrbitingEnemy : MonoBehaviour {
 
 		ChargeAmount = 0f;
 		gunSpriteRenderer.material.SetColor("_DetailColor", color);
-		
-		angle += 180;
+			
 		transform.localRotation = Quaternion.Euler(0, 0, angle);
 		Movement = Utils.AngleToVector(angle) * moveSpeed;
 	}
@@ -132,13 +133,8 @@ public class OrbitingEnemy : MonoBehaviour {
 							moveangle *= -1;
 						}
 
-						//OrbiterBulletRing obr = Instantiate(RingPrefab, transform.position, Quaternion.Euler(0,0, moveangle));
-						//obr.Color = Color.clear;
-						//obr.AnimationDuration = 1.5f;
-						//obr.transform.position += (Vector3)direction * 0.15f;
-
 						OrbiterBullet ob = Instantiate(BulletPrefab, transform.position, Quaternion.identity);
-						ob.Init(GameColor, direction);
+						ob.Init(GameColor, direction, Vector2.zero);
 
 						StartCoroutine(Fire());
 						sight.enabled = false;
@@ -157,16 +153,24 @@ public class OrbitingEnemy : MonoBehaviour {
 
 				if(!Fired) {
 					(GameManager.Instance.ContextManager as LevelManager).PointManager.IncrementPoints(2500, "Orbiter Suppressed", color);
+
+					OrbiterBullet ob = Instantiate(BulletPrefab, transform.position, Quaternion.identity);
+					ob.Init(GameColor, direction, sight.transform.position, true);
+					StartCoroutine(Fire());
 				}
 
 				StartCoroutine(Despawn());
-				Destroy(sight.gameObject);
 				despawnBegan = true;
 			}
 		}
 
 		gunSpriteRenderer.transform.rotation = Quaternion.Euler(0, 0, angle - 90);
 
+	}
+
+	public void BeginDespawn() {
+		Orbiting = false;
+		StartCoroutine(Despawn());
 	}
 
 	IEnumerator Despawn() {

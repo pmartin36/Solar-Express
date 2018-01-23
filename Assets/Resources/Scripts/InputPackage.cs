@@ -7,5 +7,7 @@ using UnityEngine;
 public class InputPackage {
 	public float AngleDiff { get; set; }
 	public Vector2 TouchPosition { get; set; }
+	public float FreeRotation { get; set; }
+	public bool Touchdown { get; set; }
 }
 

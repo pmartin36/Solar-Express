@@ -17,6 +17,11 @@ public class StoryPanel : MonoBehaviour {
 	bool NextDialog;
 	private AudioSource audio;
 
+	bool touchdown;
+
+	private float rotationState;
+	public float RotationOffset;
+
 	// Use this for initialization
 	void Start () {
 		var images = GetComponentsInChildren<Image>();
@@ -39,6 +44,15 @@ public class StoryPanel : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		TalkingSun.transform.Rotate(new Vector3(0,0,-5*Time.deltaTime));
+		touchdown = Input.touchCount > 0;
+
+		if(ShipImage.gameObject.activeInHierarchy) {
+			ShipImage.transform.rotation = Quaternion.Euler(0,0,rotationState + RotationOffset);
+		}
+	}
+
+	public void CommitRotationState() {
+		rotationState += RotationOffset;
 	}
 
 	public void NextDialogClicked() {
@@ -50,6 +64,7 @@ public class StoryPanel : MonoBehaviour {
 			char c = text[i];
 			Dialog.text = Dialog.text + c;
 			float waitTime = c == '.' ? 6f / speed : 1f / speed;
+			waitTime *= touchdown ? 0.5f : 1f;
 			yield return new WaitForSeconds(waitTime);
 		}
 	}
@@ -93,15 +108,15 @@ public class StoryPanel : MonoBehaviour {
 		switch (i) {
 			case 2:
 				break;
-			case 3:
+			case 4:
 				StartCoroutine(TransitionImageSerial(new[] { TalkingSun }, new Color(1, 1, 1, 0.4f), Color.white, 1f));
 				break;
-			case 4:
+			case 5:
 				//appear finger, start animation
 				yield return StartCoroutine(TransitionImageSerial(new[] { Finger }, Color.clear, Color.white, 1f));
 				GetComponent<Animator>().Play("StoryControls");
 				break;
-			case 5:
+			case 6:
 				GetComponent<Animator>().enabled = false;
 				Finger.gameObject.SetActive(false);
 
@@ -123,12 +138,16 @@ public class StoryPanel : MonoBehaviour {
 
 	IEnumerator SpecialActionDuring(int i) {
 		switch (i) {
-			case 2:
+			case 3:
 				StartCoroutine(TransitionImageSerial(new[] { ShipImage }, Color.clear, Color.white, 1f));
 				break;
-			case 3:
+			case 4:
 				//yield return StartCoroutine(TransitionImageSerial(new[] { TalkingSun }, Color.white, Color.clear, 0.5f));
-				yield return new WaitForSeconds(2.5f);
+				float t = 0;
+				while( t < 2.5f ) {
+					t += Time.deltaTime * ( touchdown ? 2 : 1);
+					yield return new WaitForEndOfFrame();
+				}
 				var storycore = ShipImage.GetComponent<StoryCore>();
 				storycore.SpawnShields();
 				break;
@@ -143,11 +162,12 @@ public class StoryPanel : MonoBehaviour {
 
 		var dialogPieces = new [] {
 			"Welcome to the Sun. I am the Essence of Color. Thank you for your quick response.",
-			"Color is disappearing from the Solar System and I am not powerful enough to restore it to it's former vibrancy.",
+			"The planets in the Solar System are losing their color and I'm not sure what's causing it.",
+			"This imbalance has lead space objects, such as meteors and autonomous vessels, to target passing ships.",
 			"I have imbued your ship with my power. This power allows you to restore color to any celestial body you visit.",
 			"To protect your ship, I have equipped it with 4 different colored shields.",
 			"These shields can be rotated around your ship's core. Use them to block threats with a matching color.",
-			"There isn't any more time!  Visit all the planets and stars to restore color before it's too late."
+			"There isn't any more time!  Visit all the planets to restore color before it's too late."
 		};
 
 		for(int i = 0; i < dialogPieces.Count(); i++) {

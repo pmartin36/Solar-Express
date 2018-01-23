@@ -16,6 +16,7 @@ public class GameManager : Singleton<GameManager> {
 	public MusicManager MusicManager { get; set; }
 
 	public bool FirstTimePlaying { get; set; }
+	private AsyncOperation AsyncSceneLoading;
 
 	public void Awake() {		
 		TransitioningToHome = true;
@@ -25,7 +26,6 @@ public class GameManager : Singleton<GameManager> {
 		PlayerInfo = PlayerInfo ?? new PlayerInfo();
 
 		//for testing
-
 		//PlayerInfo.LevelStars = new List<int>() {
 		//	1, 2, 3, 2, 1, 0
 		//};
@@ -42,13 +42,22 @@ public class GameManager : Singleton<GameManager> {
 
 		FirstTimePlaying = PlayerInfo.LevelStars.Count == 0;
 
+		Screen.orientation = ScreenOrientation.Portrait;
+		Screen.autorotateToLandscapeLeft = Screen.autorotateToLandscapeRight = false;
+
 		ShouldPlayAudioSources(PlayerInfo.SoundOn);
 	}
 
 	public void SwitchLevels(int index = 0) {
 		Time.timeScale = 1f;
 		SaveGame(); //save game on scene transition
-		SceneManager.LoadScene(index);
+		SceneManager.LoadSceneAsync(index);
+	}
+
+	public void SwitchLevels(int index, Func<bool> predicate) {
+		Time.timeScale = 1f;
+		SaveGame();
+		StartCoroutine(WaitForPredicateToSwitchScene(index, predicate));
 	}
 
 	public void SaveGame() {
@@ -95,5 +104,13 @@ public class GameManager : Singleton<GameManager> {
 			PlayerInfo.LevelStars[levelNumber] = Mathf.Max(stars, PlayerInfo.LevelStars[levelNumber]);
 		}
 		SaveGame();
+	}
+
+	IEnumerator WaitForPredicateToSwitchScene(int index, Func<bool> p) {
+		AsyncSceneLoading = SceneManager.LoadSceneAsync(index);
+		AsyncSceneLoading.allowSceneActivation = false;
+		yield return new WaitUntil(() => AsyncSceneLoading.progress >= 0.9f); //when allowsceneactive is false, progress stops at .9f
+		yield return new WaitUntil(p);
+		AsyncSceneLoading.allowSceneActivation = true;
 	}
 }

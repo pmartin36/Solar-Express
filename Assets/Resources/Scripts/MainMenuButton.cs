@@ -75,6 +75,7 @@ public class MainMenuButton : MonoBehaviour {
 				Debug.Log((GameManager.Instance.ContextManager as MenuManager).LevelSelector.Selected);
 				break;
 			case MainMenuButtonType.Exit:
+				Application.Quit();
 				break;
 		}
 	}

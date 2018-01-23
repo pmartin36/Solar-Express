@@ -211,12 +211,14 @@ f671a42aea5f34fec6a4450a3668c615 Assembly-CSharp.dll:UnityEngine.PostProcessing.
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Ship
 3e2352ef717506e00aeed5d2f55b3999 Assembly-CSharp.dll:.OrbiterBullet
 1a1bb2ea0ba26a8096422d16043a5890 Assembly-CSharp.dll:.OrbitingEnemy
-0127f21b9322091f4d0158da73419b33 Assembly-CSharp.dll:.StoryPanel
+702d8635e4a0a94cfd05d2fe95b5ae23 Assembly-CSharp.dll:.StoryPanel
 d2c70fcc9941e164dd550af1aef8e59b Assembly-CSharp.dll:.LevelManager
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Popup
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ScoreStar
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.LoadingText
 d3f7bd757053ecbc1e7cdd65d4858139 Assembly-CSharp.dll:.Planet
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.AudioSourceWrapper
 4e1c63de97d8346077e579a2ec9a6c45 Assembly-CSharp.dll:.GlowObjectCmd
 ba3a15ccf77d077214c2e515e44a1468 Assembly-CSharp.dll:.LevelSelector
-28b582df7920bc6f0029d4573e28aedc Assembly-CSharp.dll:.MenuManager
+dec61a637b2925662bd7ed27a84e0314 Assembly-CSharp.dll:.MenuManager
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.TextLight

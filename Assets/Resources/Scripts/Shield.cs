@@ -44,7 +44,7 @@ public class Shield : MonoBehaviour {
 	public void OnTriggerEnter2D(Collider2D collision) {
 		if(collision.tag == "Damager") {
 			Damager d = collision.GetComponent<Damager>();
-			if(d.GameColor == this.GameColor) {
+			if(d.GameColor == this.GameColor || d is OrbiterBullet) {
 				float animationDuration = 0.25f;
 
 				if (d is Bullet) {
@@ -59,7 +59,9 @@ public class Shield : MonoBehaviour {
 					m.HitShield();
 				}
 				else if(d is OrbiterBullet) {
-					return;
+					OrbiterBullet m = d as OrbiterBullet;
+					if(!m.WillBeBlocked) return;				
+					d.HitShield();
 				}
 
 				int index = 0;

@@ -8,6 +8,11 @@ public class TouchController : MonoBehaviour {
 	bool touchDown;
 	float playerStartAngle;
 
+	private float lastUpdateAngle, lastUpdateRotation, freeRotationAmount;
+	private Vector2 lastTouchPosition;
+	private float lastTouchDistance;
+	private float unmovedTime;
+
 	ParticleSystem.EmissionModule fp_em;
 
 	// Use this for initialization
@@ -19,18 +24,38 @@ public class TouchController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		var fp = (GameManager.Instance.ContextManager as LevelManager).FingerParticles;
+		float angleDiff = 0;
+		Vector2 touchPosition = Vector2.zero;
+		freeRotationAmount /= (1+Time.deltaTime/2f);	
+
 		if (Input.touchCount > 0) {
 			Touch t = Input.GetTouch(0);
+			freeRotationAmount = 0f;
 
-			Vector2 touchPosition = t.position;
+			touchPosition = t.position;
 			touchPosition = Camera.main.ScreenToWorldPoint(new Vector3(touchPosition.x, touchPosition.y, Camera.main.transform.position.z));			
 
-			float angleDiff = 0;
 			if(touchDown) {
 				float tangle = Vector3.Angle(Vector3.right, touchPosition);
 				tangle *= -Mathf.Sign(Vector3.Cross(Vector3.right, touchPosition).z);
 
-				angleDiff += (touchDownAngle - tangle);
+				angleDiff += (touchDownAngle - tangle);				
+
+				float dist = (touchPosition - lastTouchPosition).magnitude;
+				if(dist >= 0.07f || unmovedTime > 0.1f) {
+					unmovedTime = 0f;
+					lastTouchDistance = (touchPosition - lastTouchPosition).magnitude;
+					lastTouchPosition = touchPosition;
+
+					lastUpdateRotation = (angleDiff - lastUpdateAngle) * Time.deltaTime;
+					lastUpdateAngle = angleDiff;
+					Debug.Log(touchPosition);
+				}
+				else {
+					unmovedTime += Time.deltaTime;
+				}
+
+				fp.transform.position = touchPosition;			
 			}
 			else {
 				// process input as input for ship
@@ -38,22 +63,41 @@ public class TouchController : MonoBehaviour {
 				touchDownAngle *= -Mathf.Sign(Vector3.Cross(Vector3.right, touchPosition).z);
 				touchDown = true;
 				playerStartAngle = (GameManager.Instance.ContextManager as LevelManager).PlayerShip.transform.localRotation.eulerAngles.z;
-				//fp.gameObject.SetActive(true);
 				fp_em.enabled = true;
-			}
-			angleDiff += playerStartAngle;
-			fp.transform.position = touchPosition;
 
-			(GameManager.Instance.ContextManager as LevelManager).ProcessInputs(new InputPackage() {
-				AngleDiff = angleDiff,
-				TouchPosition = touchPosition
-			});
+				lastUpdateAngle = 0f;
+				lastUpdateRotation = 0f;
+				lastTouchDistance = 0f;
+				unmovedTime = 0f;
+
+				fp.gameObject.SetActive(false);
+				fp.transform.position = touchPosition;
+				fp.gameObject.SetActive(true);
+			}
+			angleDiff += playerStartAngle;			
 		}
 		else {
-			touchDown = false;
-			//fp.gameObject.SetActive(false);
-			fp_em.enabled = false;
+			HandleTouchup();
 		}
+
+		(GameManager.Instance.ContextManager as LevelManager).ProcessInputs(new InputPackage() {
+			AngleDiff = angleDiff,
+			TouchPosition = touchPosition,
+			FreeRotation = freeRotationAmount,
+			Touchdown = touchDown
+		});
 	}
 	
+	public void HandleTouchup() {
+		if (touchDown) {
+			float ratio = Mathf.Clamp01(1 - Mathf.Abs(Mathf.Abs(lastTouchPosition.x) - Mathf.Abs(lastTouchPosition.y)));
+			float moddedRotation = lastUpdateRotation + 0.01f * lastTouchDistance;// * Mathf.Sign(lastUpdateRotation) * ratio;
+			Debug.Log(moddedRotation + " " + lastTouchDistance + " " + lastUpdateRotation);
+			if (Mathf.Abs(moddedRotation) >= 0.015f) {
+				freeRotationAmount = Mathf.Clamp(moddedRotation * 60f, -12, 12);
+			}
+		}
+		touchDown = false;
+		fp_em.enabled = false;
+	}
 }

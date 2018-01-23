@@ -8,8 +8,6 @@ public class EMP : MonoBehaviour {
 	private int TimeToDetonation;
 	public Colors GameColor;
 
-	Vector2 conversion;
-
 	private Color color;
 	private Color secondaryColor;
 
@@ -78,19 +76,13 @@ public class EMP : MonoBehaviour {
 
 		StartCoroutine(Action());
 
-		Vector2 camSize = new Vector2(Camera.main.orthographicSize * Camera.main.aspect, Camera.main.orthographicSize);
-		Vector2 canvasSize = new Vector2(136/2f, 205/2f);
-		conversion = new Vector2(canvasSize.x/camSize.x, canvasSize.y/camSize.y);
+		text.GetComponent<RectTransform>().position = transform.position + Vector3.one * 0.005f;
 
 		audio = GetComponent<AudioSource>();
 		GameManager.Instance.ContextManager.AddAudioSource(audio);
 		audio.mute = !GameManager.Instance.PlayerInfo.SoundOn;
 	}
 
-	// Update is called once per frame
-	void Update () {
-		text.transform.localPosition = new Vector2((transform.localPosition.x+0.005f) * conversion.x, (transform.localPosition.y + 0.005f) * conversion.y);
-	}
 
 	private void UpdateTimer(int c) {
 		string newText = (TimeToDetonation - c).ToString();

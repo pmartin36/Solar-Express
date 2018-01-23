@@ -9,6 +9,7 @@ public class CameraController : MonoBehaviour {
 	public float shakeMagnitude;
 	private float shakeDampening = 25f;
 
+	Camera cam;
 	Animator anim;
 
 	public Material PostMaterial;
@@ -19,6 +20,14 @@ public class CameraController : MonoBehaviour {
 		GameManager.Instance.MainCameraController = this;
 		anim = GetComponent<Animator>();
 		shakeDampening = 25f;
+
+		cam = GetComponent<Camera>();
+		float height = cam.orthographicSize;
+		float width = height * cam.aspect;
+
+		if (width < height) {
+			cam.orthographicSize = 3.5f / cam.aspect;
+		}
 
 		/*
 		UnityEngine.Random.InitState((int)DateTime.Now.Ticks);

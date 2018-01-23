@@ -16,7 +16,11 @@ public class MenuManager : ContextManager {
 	public LevelSelector LevelSelector;
 	public AudioClip MenuMusic;
 
+	public LoadingText LoadingText;
+
 	private AudioSource audio;
+
+	public float TransitionPct = 0f;
 
 	public override void Awake() {
 		base.Awake();
@@ -171,41 +175,54 @@ public class MenuManager : ContextManager {
 	}
 
 	IEnumerator CloseMenu(int newSceneIndex) {		
-		float startTime = Time.time;
-		float ttime = 2f;
 		List<Button> lsbuttons = LevelSelectScreen.GetComponentsInChildren<Button>().Where(t => t.tag == "MainMenuButton").ToList();
+		foreach (Button b in lsbuttons) { b.interactable = false; }
 
-		foreach(Button b in lsbuttons) { b.interactable = false; }
+		GetComponent<Animator>().SetBool("Leaving", true);
+		GameManager.Instance.SwitchLevels(newSceneIndex, () => {
+			return TransitionPct > 1.09f && LoadingText.gameObject.activeInHierarchy && LoadingText.AlphaValue < 0.01f;
+		});
+
 		yield return new WaitForEndOfFrame();
-
-		Vector3 startCameraPosition = Vector3.back*10;
-		Vector3 endCameraPosition = new Vector3(0, LevelSelector.transform.position.y+0.04f, -10);
-		Color endColor = new Color(0, 8f/255f, 21f/255f);
-
-		Image scrollviewimage = LevelSelector.GetComponent<Image>();
 
 		//stop music, start thruster
 		AudioSource audio = GetComponent<AudioSource>();
 		audio.Play();
-		StartCoroutine(SetVolumeGradual(audio,0));
+		StartCoroutine(SetVolumeGradual(audio, 0));
 		GameManager.Instance.MusicManager.SetVolumeLevelGradual(0f, 2f);
 
-		while (Time.time - startTime < ttime + Time.deltaTime) {
-			float jTime = (Time.time - startTime) / ttime;
+		Color endColor = new Color(0, 8f / 255f, 21f / 255f);
 
-			Camera.main.transform.position = Vector3.Lerp( startCameraPosition, endCameraPosition, jTime);
-			Camera.main.orthographicSize = Mathf.Lerp(5,0.7f,jTime);
-			Camera.main.backgroundColor = Color.Lerp(Color.black, endColor, jTime);
+		Image scrollviewimage = LevelSelector.GetComponent<Image>();
 
-			LevelSelector.SetSelectedRingAlpha( Mathf.Lerp(0,0.5f,jTime) );
-			LevelSelector.SetElementsAlpha2( Mathf.Lerp(1, 0, jTime) );
+		RectTransform scrollviewRect = LevelSelector.GetComponent<RectTransform>();
+		float deltaPos = scrollviewRect.position.y;
 
-			scrollviewimage.color = new Color(endColor.r, endColor.g, endColor.b, Mathf.Lerp(0,1,jTime));
+		float sizeModifier = 7.01f;
+
+		RectTransform screen = LevelSelectScreen.GetComponent<RectTransform>();
+		Vector3 finalScale = Vector3.one * sizeModifier * 0.98f;
+		Vector3 startPosition = screen.position;
+		Vector3 endPosition = startPosition - new Vector3(0, (deltaPos-0.005f)*sizeModifier);
+
+		Image arrow = GameObject.FindGameObjectWithTag("Arrow").GetComponent<Image>();
+		
+		while (TransitionPct < 1.09f) {
+			screen.localScale = Vector3.Lerp(Vector3.one, finalScale, TransitionPct);
+			screen.position = Vector3.Lerp(startPosition, endPosition, TransitionPct);		
+
+			//start matching level color
+			Camera.main.backgroundColor = Color.Lerp(Color.black, endColor, TransitionPct);
+
+			LevelSelector.SetSelectedRingAlpha(Mathf.Lerp(0, 0.5f, TransitionPct*1.5f));
+			LevelSelector.SetElementsAlpha2(Mathf.Lerp(1, 0, TransitionPct*2));
+			arrow.color = Color.Lerp(Color.white, Color.clear, TransitionPct*2);
+
+			scrollviewimage.color = new Color(endColor.r, endColor.g, endColor.b, Mathf.Lerp(0, 1, TransitionPct));
 
 			yield return new WaitForEndOfFrame();
 		}
-
-		GameManager.Instance.SwitchLevels(newSceneIndex);
+		LoadingText.gameObject.SetActive(true);
 	}
 
 	IEnumerator SetVolumeGradual(AudioSource audio, float end) {

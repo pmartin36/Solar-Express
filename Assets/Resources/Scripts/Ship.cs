@@ -28,8 +28,13 @@ public class Ship : MonoBehaviour {
 	}
 
 	public void Rotate(InputPackage r) {
-		Vector3 localRot = transform.localRotation.eulerAngles;
-		transform.localRotation = Quaternion.Euler(localRot.x,localRot.y,r.AngleDiff);
+		if(r.Touchdown) {
+			Vector3 localRot = transform.localRotation.eulerAngles;
+			transform.localRotation = Quaternion.Euler(localRot.x,localRot.y,r.AngleDiff);
+		}
+		else {
+			transform.Rotate(new Vector3(0,0,r.FreeRotation));
+		}
 	}
 
 	public void ChangePlayerSize(Vector2 start, Vector2 end, float ttime = 4f) {

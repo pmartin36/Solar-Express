@@ -28,6 +28,8 @@ TagManager:
   - Scrolling Star Particle
   - Popup
   - ShipTrail
+  - Arrow
+  - Loading
   layers:
   - Default
   - TransparentFX

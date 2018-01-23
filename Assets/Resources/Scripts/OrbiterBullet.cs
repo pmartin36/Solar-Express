@@ -5,10 +5,16 @@ using UnityEngine;
 public class OrbiterBullet : Damager {
 
 	public Vector3 Movement { get; set; }
+	public Vector3 FinalPosition { get; set; }
+	public bool WillBeBlocked { get; set; }
+
+	private float amountToMove;
+	private Vector3 startPosition;
 
 	private ParticleSystem particleSystem;
 
 	private AudioSource audio;
+	
 
 	// Use this for initialization
 	protected override void Start() {
@@ -29,11 +35,17 @@ public class OrbiterBullet : Damager {
 	}
 
 
-	public void Init(Colors c, Vector3 direction) {
+	public void Init(Colors c, Vector3 direction, Vector3 finalPosition, bool willBeBlocked = false) {
 		GameColor = c;
 		Movement = direction.normalized * 15f;
 
 		transform.position -= direction.normalized * 0.1f;
+		
+		FinalPosition = finalPosition;
+		WillBeBlocked = willBeBlocked;
+
+		startPosition = transform.position;
+		amountToMove = (startPosition - FinalPosition).magnitude;
 	}
 
 	public override void HitCore(bool screenshake = true) {
@@ -45,15 +57,25 @@ public class OrbiterBullet : Damager {
 		StartCoroutine(DestroyAfterSeconds());
 	}
 
+	public override void HitShield() {
+		base.HitShield();
+		StartCoroutine(DestroyAfterSeconds());
+	}
+
 	public IEnumerator DestroyAfterSeconds() {
+		GetComponent<CircleCollider2D>().enabled = false;
 		yield return new WaitForSeconds(2f);
 		GameManager.Instance.ContextManager.RemoveAudioSource(audio);
 		Destroy(this.gameObject);
 	}
 
 	// Update is called once per frame
-	protected virtual void FixedUpdate() {
-		transform.position += Movement * Time.fixedDeltaTime;
+	protected override void FixedUpdate() {
+		Vector3 newPos = transform.position + Movement * Time.fixedDeltaTime;
+		if( (newPos - startPosition).magnitude > amountToMove ) {
+			newPos = FinalPosition;
+		}
+		transform.position = newPos;
 	}
 
 	IEnumerator Fire() {
