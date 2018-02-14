@@ -42,9 +42,11 @@ public class Bullet : Damager {
 		audio.mute = !GameManager.Instance.PlayerInfo.SoundOn;
 	}
 	
-	public void Init(LaserShip ship, float direction, float speed) {
+	public void Init(LaserShip ship, float direction, float speed, int damage = 1) {
 		GameColor = ship.GameColor;
 		transform.localRotation = Quaternion.Euler(0,0,direction);
+
+		Damage = damage;
 
 		SpawningShip = ship;
 

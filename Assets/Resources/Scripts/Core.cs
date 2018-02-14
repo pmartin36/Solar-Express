@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,6 +15,8 @@ public class Core : MonoBehaviour {
 	public List<Texture> LightSprites;
 
 	SpriteRenderer spriteRenderer;
+
+	public event EventHandler CoreHit;
 
 	// Use this for initialization
 	void Start () {
@@ -31,6 +34,15 @@ public class Core : MonoBehaviour {
 	public void OnTriggerEnter2D(Collider2D collision) {
 		if (collision.tag == "Damager") {			
 			Damager d = collision.GetComponent<Damager>();
+			if(CoreHit != null) {
+				CoreHit(this, null);
+			}
+
+			if(d.Damage == 0) {
+				d.HitCore(true);
+				StartCoroutine(ShipHit(collision.transform.position - this.transform.position, false));
+				return;
+			}
 
 			Health--;
 			StartCoroutine(ShipHit(collision.transform.position - this.transform.position));
@@ -59,9 +71,9 @@ public class Core : MonoBehaviour {
 		}
 	}
 
-	IEnumerator ShipHit(Vector3 direction) {
+	IEnumerator ShipHit(Vector3 direction, bool shouldSmoke = true) {
 		Vector3 position = transform.position + 0.75f * direction * transform.localScale.x;
-		GameObject hit = Instantiate(ShipHitPrefab, position, Quaternion.Euler(0,0,Utils.VectorToAngle(direction)+90), this.transform);
+		GameObject hit = Instantiate(ShipHitPrefab, position, Quaternion.Euler(0, 0, Utils.VectorToAngle(direction) + 90), this.transform);
 
 		AudioSource hitAudio = hit.GetComponent<AudioSource>();
 		GameManager.Instance.ContextManager.AddAudioSource(hitAudio);
@@ -71,10 +83,18 @@ public class Core : MonoBehaviour {
 
 		var explosion = explosionps.Single(p => !p.main.loop);
 		var smoke = explosionps.Single(p => p.main.loop);
+		smoke.gameObject.SetActive(shouldSmoke);
 		smoke.gameObject.transform.position = position / 1.5f;
-
+		
 		yield return new WaitForSeconds(explosion.main.duration);
 
-		Destroy(explosion);
+		
+		if(shouldSmoke) {
+			Destroy(explosion);
+		}
+		else {
+			Destroy(hit.gameObject);
+		}
+		
 	}
 }

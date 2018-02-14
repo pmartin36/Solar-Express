@@ -10,27 +10,48 @@ public class GameManager : Singleton<GameManager> {
 	public CameraController MainCameraController { get; set; }
 	public ContextManager ContextManager { get; set; }
 	public bool TransitioningToHome { get; set; }
+	public bool ShouldShowRatingPlea { get; set; }
 
 	public PlayerInfo PlayerInfo { get; set; }
 	public GameObject MenuParticles { get; set; }
 	public MusicManager MusicManager { get; set; }
 
+	public Dictionary<int, List<IThreatParams>> ThreatParams;
+
 	public bool FirstTimePlaying { get; set; }
 	private AsyncOperation AsyncSceneLoading;
 
-	public void Awake() {		
+	public void Awake() {
 		TransitioningToHome = true;
 
 		Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
 		PlayerInfo = Serializer<PlayerInfo>.Deserialize("playerinfo.bin");
 		PlayerInfo = PlayerInfo ?? new PlayerInfo();
 
-		//for testing
+		ThreatParams = Serializer<Dictionary<int, List<IThreatParams>>>.DeserializeLocal("Threats.bytes");
+
+		/*  for testing */
 		//PlayerInfo.LevelStars = new List<int>() {
 		//	1, 2, 3, 2, 1, 0
 		//};
 
-		PlayerInfo.LevelStars = new List<int>();
+		//PlayerInfo.LevelStars = new List<int>();
+
+		//ThreatParams = Serializer<Dictionary<int, List<IThreatParams>>>.Deserialize("Threats.bin");
+		if(ThreatParams != null) {
+			string levels = "";
+			foreach(var k in ThreatParams) {
+				levels += k.Key + ", ";
+			}
+			Debug.Log(levels);
+		}
+		else {
+			Debug.Log("No threat params yet");
+			ThreatParams = new Dictionary<int, List<IThreatParams>>();
+		}
+		PlayerInfo.LevelStars = PlayerInfo.LevelStars.Take(ThreatParams.Count+1).ToList();
+
+		/* end testing */
 
 		GameObject particlePrefab = Resources.Load<GameObject>("Prefabs/MenuParticles");
 		MenuParticles = Instantiate(particlePrefab);
@@ -48,10 +69,15 @@ public class GameManager : Singleton<GameManager> {
 		ShouldPlayAudioSources(PlayerInfo.SoundOn);
 	}
 
-	public void SwitchLevels(int index = 0) {
+	public bool SwitchLevels(int index = 0) {
 		Time.timeScale = 1f;
 		SaveGame(); //save game on scene transition
-		SceneManager.LoadSceneAsync(index);
+
+		if(SceneManager.sceneCountInBuildSettings > index) {
+			SceneManager.LoadSceneAsync(index);
+			return true;
+		}
+		return false;
 	}
 
 	public void SwitchLevels(int index, Func<bool> predicate) {
@@ -97,7 +123,7 @@ public class GameManager : Singleton<GameManager> {
 
 	public void UpdateLevelStars(int levelNumber, int stars) {
 		FirstTimePlaying = false;
-		if(PlayerInfo.LevelStars.Count <= levelNumber) {
+		if(levelNumber > PlayerInfo.LevelStars.Count) {
 			PlayerInfo.LevelStars.Add(stars);
 		}
 		else {

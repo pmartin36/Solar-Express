@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,6 +20,8 @@ public class Shield : MonoBehaviour {
 	private static float lastShieldHitTime = 0;
 	private static float lastShieldHitPitch = 0.95f;
 	private AudioSource audio;
+
+	public event EventHandler ShieldHit; 
 
 	// Use this for initialization
 	void Start () {
@@ -45,6 +48,9 @@ public class Shield : MonoBehaviour {
 		if(collision.tag == "Damager") {
 			Damager d = collision.GetComponent<Damager>();
 			if(d.GameColor == this.GameColor || d is OrbiterBullet) {
+				if(ShieldHit != null) {
+					ShieldHit(this, null);
+				}
 				float animationDuration = 0.25f;
 
 				if (d is Bullet) {
@@ -63,19 +69,20 @@ public class Shield : MonoBehaviour {
 					if(!m.WillBeBlocked) return;				
 					d.HitShield();
 				}
-
-				int index = 0;
-				if (ringCoroutines.Count >= 2) {
-					StopCoroutine(ringCoroutines[0]);
-				}
-				else {
-					index = ringCoroutines.Count;
-				}
+				d.GetComponent<Collider2D>().enabled = false;	
 
 				Vector2 collisionCenter = (collision.transform.position - this.transform.position);
-				ringInfo[index] = collisionCenter.normalized * 0.85f;
+				ringInfo[ringIndex] = collisionCenter.normalized * 0.85f;
 
-				ringCoroutines.Add(StartCoroutine(HitShield(Utils.GetColorFromGameColor(d.GameColor), index, animationDuration)));
+				if (ringCoroutines.Count < 2) {					
+					ringCoroutines.Add(StartCoroutine(HitShield(Utils.GetColorFromGameColor(d.GameColor), ringIndex, animationDuration)));
+				}
+				else {
+					StopCoroutine(ringCoroutines[ringIndex]);
+					ringCoroutines[ringIndex] = StartCoroutine(HitShield(Utils.GetColorFromGameColor(d.GameColor), ringIndex, animationDuration));
+				}
+
+				ringIndex = (ringIndex + 1) % 2;
 			}
 			else {
 				//projectile passes through
@@ -87,7 +94,7 @@ public class Shield : MonoBehaviour {
 			EMPExplosion s = collision.GetComponent<EMPExplosion>();
 			if (s.GameColor == GameColor) {
 				//disable shield for time
-				StartCoroutine(Disable());
+				DisableShieldForTime(4.5f);
 			}
 			else {
 				
@@ -95,7 +102,11 @@ public class Shield : MonoBehaviour {
 		}
 	}
 
-	void ToggleDisabled(bool disabled) {
+	public void DisableShieldForTime(float time) {
+		StartCoroutine(DisableForTime(time));
+	}
+
+	private void ToggleDisabled(bool disabled) {
 		Disabled = disabled;
 
 		Color c = spriteRenderer.color;
@@ -105,10 +116,10 @@ public class Shield : MonoBehaviour {
 		polycollider.enabled = !disabled;
 	}
 
-	IEnumerator Disable() {
+	IEnumerator DisableForTime(float time) {
 		ToggleDisabled(true);
 
-		yield return new WaitForSeconds(4.5f);
+		yield return new WaitForSeconds(time);
 
 		float startTime = Time.time;
 		float jTime = 0.5f;
@@ -118,6 +129,7 @@ public class Shield : MonoBehaviour {
 			spriteRenderer.color = c;
 			yield return new WaitForEndOfFrame();
 		}
+
 		Disabled = false;
 		polycollider.enabled = true;
 	}
@@ -137,12 +149,14 @@ public class Shield : MonoBehaviour {
 		audio.pitch = lastShieldHitPitch;
 		audio.Play();
 		
-
+		ringColor[index] = Color.white;
+		Color halfColor = new Color(0.5f,0.5f,0.5f,0.5f);
 		float startTime = Time.time;
 		float halfduration = animationDuration/2f;
 		while(Time.time - startTime < halfduration + Time.deltaTime) {
+			float ttime = (Time.time - startTime) / animationDuration;
 			Vector4 ring = ringInfo[index];
-			ring.w = Mathf.Lerp(0, 2, (Time.time - startTime) / animationDuration);
+			ring.w = Mathf.Lerp(0, 2, ttime);
 			ringInfo[index] = ring;
 			yield return new WaitForEndOfFrame();
 		}
@@ -151,11 +165,16 @@ public class Shield : MonoBehaviour {
 		animationDuration *= 1.5f;
 		while (Time.time - startTime < animationDuration + Time.deltaTime) {
 			Vector4 ring = ringInfo[index];
-			ring.z = Mathf.Lerp(0, 2, (Time.time - startTime) / animationDuration);
+			float ttime = (Time.time - startTime) / animationDuration;
+			ring.z = Mathf.Lerp(0, 2, ttime);
 			ringInfo[index] = ring;
+			ringColor[index] = Color.Lerp(Color.white, halfColor, ttime);
 			yield return new WaitForEndOfFrame();
 		}
 
-		ringCoroutines.RemoveAt(index);
+		ringColor[index] = Color.clear;
+		ringInfo[index] = Vector4.zero;
+		//if (index < ringCoroutines.Count)
+		//	ringCoroutines.RemoveAt(index);
 	}
 }

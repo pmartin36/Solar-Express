@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>Android:13</UnityBuildTarget>
     <UnityVersion>2017.1.0p4</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -143,10 +145,12 @@
     <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
     <Compile Include="Assets\Resources\Scripts\InGameButtons.cs" />
     <Compile Include="Assets\Resources\Scripts\InputPackage.cs" />
+    <Compile Include="Assets\Resources\Scripts\IThreat.cs" />
     <Compile Include="Assets\Resources\Scripts\LaserShip.cs" />
     <Compile Include="Assets\Resources\Scripts\LevelFailMenu.cs" />
     <Compile Include="Assets\Resources\Scripts\LevelManager.cs" />
     <Compile Include="Assets\Resources\Scripts\LevelManagerNormal.cs" />
+    <Compile Include="Assets\Resources\Scripts\LevelManagerThreatSpawn.cs" />
     <Compile Include="Assets\Resources\Scripts\LevelManagerTutorial.cs" />
     <Compile Include="Assets\Resources\Scripts\LevelSelectElement.cs" />
     <Compile Include="Assets\Resources\Scripts\LevelSelector.cs" />
@@ -179,10 +183,17 @@
     <Compile Include="Assets\Resources\Scripts\StoryPanel.cs" />
     <Compile Include="Assets\Resources\Scripts\TestRotateAround.cs" />
     <Compile Include="Assets\Resources\Scripts\TextLight.cs" />
+    <Compile Include="Assets\Resources\Scripts\ThreatSpawnManager.cs" />
     <Compile Include="Assets\Resources\Scripts\TouchController.cs" />
-    <Compile Include="Assets\Resources\Scripts\UpgradeButton.cs" />
+    <Compile Include="Assets\Resources\Scripts\RateButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UpgradeTextButton.cs" />
     <Compile Include="Assets\Resources\Scripts\Utils.cs" />
+    <Compile Include="Assets\Resources\Trailer\TrailerLasership.cs" />
+    <Compile Include="Assets\Resources\Trailer\TrailerLasershipBullet.cs" />
+    <Compile Include="Assets\Resources\Trailer\TrailerManager.cs" />
+    <Compile Include="Assets\Resources\Trailer\TrailerMeteor.cs" />
+    <Compile Include="Assets\Resources\Trailer\TrailerPlanet.cs" />
+    <Compile Include="Assets\Resources\Trailer\TrailerShield.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Libraries\GlowingObjectOutlines-master\Assets\Resources\Blur.shader" />
@@ -249,11 +260,13 @@
     <None Include="Assets\Resources\Shaders\Sprites-EMPExplosion.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-EMPExplosionCenter.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-EndPlanet.shader" />
+    <None Include="Assets\Resources\Shaders\Sprites-EndStar.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-InGameButton.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-LaserShip.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-LaserShip2.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-LevelFail.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-LevelProgressBar.shader" />
+    <None Include="Assets\Resources\Shaders\Sprites-LevelSelectStar.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-OrbitingBase.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-OrbitingGun.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-PointBeam.shader" />
@@ -262,6 +275,8 @@
     <None Include="Assets\Resources\Shaders\Sprites-ShipTrail2.shader" />
     <None Include="Assets\Resources\Shaders\Sprites-UpgradeButton.shader" />
     <None Include="Assets\Resources\Shaders\StoryTalkingSun.shader" />
+    <None Include="Assets\Resources\Trailer\Trailer Blur.shader" />
+    <None Include="Assets\Resources\Trailer\TrailerPlanet.shader" />
     <None Include="Assets\TextMesh Pro\Fonts\Anton OFL.txt" />
     <None Include="Assets\TextMesh Pro\Fonts\Bangers - OFL.txt" />
     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />

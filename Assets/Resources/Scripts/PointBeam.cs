@@ -28,6 +28,23 @@ public class PointBeam : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		
+
+		//audio = GetComponent<AudioSource>();
+	}
+
+	public void Init(PointBeamParameters p) {
+		transform.position = new Vector2(p.x, p.y);
+		Init(p.GameColor, p.Duration);	
+		
+		(GameManager.Instance.ContextManager as LevelManager).TotalAvailablePoints += (int)(400 * p.Duration);
+	}
+
+	public void Init(Colors c, float lifetime) {
+		GameColor = c;
+		totalLifetime = lifetime;
+		currentLifetime = 0;
+
 		color = Utils.GetColorFromGameColor(GameColor);
 
 		beamMeshFilter = GetComponentInChildren<MeshFilter>();
@@ -45,10 +62,10 @@ public class PointBeam : MonoBehaviour {
 
 		Color centerColor = Color.white;
 		Color exteriorColor = color;
-		if(GameColor == Colors.Blue) {
+		if (GameColor == Colors.Blue) {
 			centerColor = Color.cyan;
 		}
-		else if( GameColor == Colors.Green) {
+		else if (GameColor == Colors.Green) {
 			exteriorColor = color / 2f;
 			exteriorColor.a = 1f;
 		}
@@ -57,14 +74,6 @@ public class PointBeam : MonoBehaviour {
 		beamMeshRenderer.material.SetColor("_CenterColor", centerColor);
 		spriteRenderer.material.SetColor("_ExteriorColor", exteriorColor);
 		spriteRenderer.material.SetColor("_CenterColor", centerColor);
-
-		//audio = GetComponent<AudioSource>();
-	}
-
-	public void Init(Colors color, float lifetime) {
-		GameColor = color;
-		totalLifetime = lifetime;
-		currentLifetime = 0;
 	}
 
 	private void SetSparkParticleProperties(Shield s, Vector2 t) {
@@ -112,7 +121,7 @@ public class PointBeam : MonoBehaviour {
 
 				if (s.GameColor == GameColor) {
 					//add points
-					(GameManager.Instance.ContextManager as LevelManager).PointManager.IncrementPoints(10, "Point Beam", color);
+					(GameManager.Instance.ContextManager as LevelManager).PointManager.IncrementPoints((int)(400*Time.deltaTime), "Point Beam", color);
 
 					gettingPoints = true;
 					break;

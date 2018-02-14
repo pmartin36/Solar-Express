@@ -48,17 +48,21 @@ public class OrbitingEnemy : MonoBehaviour {
 	//public static OrbiterBulletRing RingPrefab;
 	public static OrbiterBullet BulletPrefab;
 	public static SpriteRenderer SightPrefab;
-
 	
-	Animator anim;
-
-	
+	Animator anim;	
 
 	// Use this for initialization
 	void Start () {
 		anim = GetComponent<Animator>();
 	}
 	
+	public void Init(OrbitingEnemyParameters p) {
+		transform.position = new Vector2(p.x, p.y);
+		Init( p.GameColor, p.MoveSpeed, p.Angle );
+
+		(GameManager.Instance.ContextManager as LevelManager).TotalAvailablePoints += 2500;
+	}
+
 	public void Init(Colors c, float moveSpeed = 2f, float angle = 0) {
 		//RingPrefab = RingPrefab ?? Resources.Load<OrbiterBulletRing>("Prefabs/OrbiterBulletRing");
 		BulletPrefab = BulletPrefab ?? Resources.Load<OrbiterBullet>("Prefabs/OrbiterBullet");

@@ -22,6 +22,17 @@ public class LaserShip : MonoBehaviour {
 	private ParticleSystem [] FeedPS;
 	private AudioSource audio;
 
+	public void Init(LaserShipParameters p) {
+		Init(
+			p.EndDistFromShip,
+			p.StartRotation,
+			p.NumberOfShots,
+			p.TimeBtwShots,
+			p.RotationBetweenShots,
+			p.GameColor
+		);
+	}
+
 	public void Init(float endDistFromShip, float startRotation = 0, int numberOfShots = 1, float timeBtwShots = 1f, float rotationBetweenShots = 0, Colors color = Colors.Red) {
 		StartRotation = startRotation;
 		NumberOfShots = numberOfShots;
@@ -29,12 +40,14 @@ public class LaserShip : MonoBehaviour {
 		TimeBetweenShots = timeBtwShots;
 		
 		Direction = Utils.AngleToVector(startRotation).normalized;
-		StartPosition = -endDistFromShip * Direction;
+		StartPosition = endDistFromShip * Direction;
 
 		GameColor = color;
 		Color c = Utils.GetColorFromGameColor(color);
 		if(GameColor == Colors.Blue) c.g += 0.55f;
 		ShipColor = c;
+
+		(GameManager.Instance.ContextManager as LevelManager).TotalAvailablePoints += NumberOfShots * 1000;
 	}
 
 	// Use this for initialization
@@ -67,7 +80,7 @@ public class LaserShip : MonoBehaviour {
 
 	private Bullet SpawnBullet(float chargeTime) {
 		Vector3 direction = Utils.AngleToVector(StartRotation).normalized;
-		Bullet b = Instantiate(bulletPrefab, this.transform.position + 0.25f * direction, Quaternion.identity);
+		Bullet b = Instantiate(bulletPrefab, this.transform.position - 0.25f * direction, Quaternion.identity);
 		b.Init(this, transform.localRotation.eulerAngles.z, 4f);
 		return b;
 	}
@@ -81,7 +94,7 @@ public class LaserShip : MonoBehaviour {
 			float chargeTime = 3f;
 
 			Bullet b = SpawnBullet(chargeTime);
-			Vector3 endPosition = transform.position + Direction / 2.5f;
+			Vector3 endPosition = transform.position - Direction / 2.5f;
 
 			//move bullet out
 			float moveOutTime = TimeBetweenShots * 0.7f;
@@ -119,7 +132,7 @@ public class LaserShip : MonoBehaviour {
 	}
 
 	IEnumerator Despawn() {
-		Vector3 endPosition = StartPosition + Utils.AngleToVector(StartRotation).normalized;
+		Vector3 endPosition = StartPosition - Utils.AngleToVector(StartRotation).normalized;
 		Vector3 moveDirection = (endPosition - StartPosition).normalized;
 		float moveSpeed = 3;
 
@@ -165,9 +178,9 @@ public class LaserShip : MonoBehaviour {
 	}
 
 	IEnumerator Spawn() {
-		Vector3 spawnPosition = StartPosition - Utils.AngleToVector(StartRotation).normalized * 5;
+		Vector3 spawnPosition = StartPosition + Utils.AngleToVector(StartRotation).normalized * 5;
 		transform.position = spawnPosition;
-		transform.localRotation = Quaternion.Euler(0, 0, StartRotation);
+		transform.localRotation = Quaternion.Euler(0, 0, 180+StartRotation);
 
 		float sqrmag = (StartPosition - spawnPosition).sqrMagnitude;
 
@@ -185,7 +198,7 @@ public class LaserShip : MonoBehaviour {
 		childTransform.localScale = new Vector3(1.2f, 1, 1);
 
 		while ((transform.position - spawnPosition).sqrMagnitude < sqrmag) {
-			transform.position += Direction * moveSpeed * Time.deltaTime;
+			transform.position -= Direction * moveSpeed * Time.deltaTime;
 			yield return new WaitForEndOfFrame();
 		}
 

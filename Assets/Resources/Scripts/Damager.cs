@@ -6,6 +6,7 @@ using UnityEngine;
 public class Damager : MonoBehaviour {
 
 	public Colors GameColor;
+	public int Damage;
 
 	// Use this for initialization
 	protected virtual void Start () {

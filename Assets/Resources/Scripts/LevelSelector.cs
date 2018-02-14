@@ -130,6 +130,10 @@ public class LevelSelector : ScrollRect {
 		float nearestTile = Mathf.Round(estPos / singleElementWidth) * singleElementWidth;
 		velocity = new Vector2( (nearestTile - startPosition) * (alpha), 0);
 
+		if(factor == 0) {
+			finalPosition = 0f;
+			return;
+		}
 		finalPosition = nearestTile / (totalWidth * factor);
 
 		//DEBUGGING

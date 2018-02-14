@@ -26,6 +26,11 @@ public class EMP : MonoBehaviour {
 	void Start () {
 	}
 
+	public void Init(EMPParameters p) {
+		transform.position = new Vector2(p.x, p.y);
+		Init(p.GameColor, p.DetonationTime); 		
+	}
+
 	public void Init(Colors c, int detonationTime = 3) {
 		GameColor = c;
 		switch (c) {

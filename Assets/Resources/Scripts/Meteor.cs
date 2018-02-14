@@ -16,15 +16,32 @@ public class Meteor : Damager {
 	private Color color;
 	private float size;
 	private float startTime;
+	private int points;
 
 	// Use this for initialization
 	protected override void Start () {
 		startTime = Time.time;
 	}
 
-	public void Init(Colors c, float angle = 0f, float vel = 5f, float particleSize = 0.5f) {
+	public void Init(MeteorParameters p) {
+		transform.position = new Vector2(p.x, p.y);
+		Init(
+			p.GameColor,
+			p.Angle,
+			p.Velocity,
+			p.ParticleSize,
+			p.Damage
+		);
+
+		points = p.Points;
+		(GameManager.Instance.ContextManager as LevelManager).TotalAvailablePoints += points;
+	}
+
+	public void Init(Colors c, float angle = 0f, float vel = 5f, float particleSize = 0.5f, int damage = 1) {
 		base.Init();
 		GameColor = c;
+
+		Damage = damage;
 
 		angle -= 45;
 		transform.localRotation = Quaternion.Euler(0,0,angle);
@@ -100,7 +117,7 @@ public class Meteor : Damager {
 	}
 
 	public override void HitShield() {
-		(GameManager.Instance.ContextManager as LevelManager).PointManager.IncrementPoints(2000, "Meteor Blocked", color);
+		(GameManager.Instance.ContextManager as LevelManager).PointManager.IncrementPoints(points, "Meteor Blocked", color);
 		StartCoroutine(HitObject());
 	}
 

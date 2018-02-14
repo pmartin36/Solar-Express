@@ -10,7 +10,8 @@ public class MenuManager : ContextManager {
 	public GameObject HomeScreen;
 	public GameObject LevelSelectScreen;
 
-	public Popup ActivePopup;
+	public Popup RatingPopup;
+	public Popup ActivePopup;	
 	public RectTransform ActivePopupRectTransform;
 
 	public LevelSelector LevelSelector;
@@ -39,6 +40,12 @@ public class MenuManager : ContextManager {
 				m.SetPlayingSong(MenuMusic);
 			}
 			GameManager.Instance.MusicManager.SetVolumeLevelGradual(0.3f, 1f);
+		}
+
+		//GameManager.Instance.PlayerInfo.HasSeenRatingPlea = false;
+		if (GameManager.Instance.PlayerInfo.LevelStars.Count > 2 && !GameManager.Instance.PlayerInfo.HasSeenRatingPlea) {
+			StartCoroutine(OpenRatingPopup());
+			GameManager.Instance.PlayerInfo.HasSeenRatingPlea = true;
 		}
 
 		audio = GetComponent<AudioSource>();
@@ -77,16 +84,6 @@ public class MenuManager : ContextManager {
 				ActivePopup.gameObject.SetActive(false);
 				ActivePopup = null;
 			}
-
-			//if( touchPosition.x < ActivePopupRect.xMin ||
-			//	touchPosition.x > ActivePopupRect.xMax ||
-			//	touchPosition.y < ActivePopupRect.yMin ||
-			//	touchPosition.y > ActivePopupRect.yMax) {
-
-			//	ActivePopup.gameObject.SetActive(false);
-			//	ActivePopup = null;
-
-			//}
 		}
 	}
 
@@ -102,26 +99,21 @@ public class MenuManager : ContextManager {
 		}
 		HomeScreen.SetActive(false);
 
-		if (GameManager.Instance.FirstTimePlaying) {
-			GameManager.Instance.SwitchLevels(Utils.StoryScene);
-		}
-		else {
-			LevelSelectScreen.SetActive(true);
+		LevelSelectScreen.SetActive(true);
 
-			startTime = Time.time;
+		startTime = Time.time;
 
-			while (Time.time - startTime < ttime + Time.deltaTime) {
-				float jTime = (Time.time - startTime) / ttime;
-				foreach (Button b in lsbuttons) {
-					var bc = b.colors;
-					Color c = bc.normalColor;
-					c.a = Mathf.Lerp(0, 1, jTime);
-					bc.normalColor = c;
-					b.colors = bc;
-				}
-				yield return new WaitForEndOfFrame();
+		while (Time.time - startTime < ttime + Time.deltaTime) {
+			float jTime = (Time.time - startTime) / ttime;
+			foreach (Button b in lsbuttons) {
+				var bc = b.colors;
+				Color c = bc.normalColor;
+				c.a = Mathf.Lerp(0, 1, jTime);
+				bc.normalColor = c;
+				b.colors = bc;
 			}
-		}
+			yield return new WaitForEndOfFrame();
+		}	
 	}
 
 	public void OpenPopup(Popup popup) {
@@ -171,7 +163,13 @@ public class MenuManager : ContextManager {
 		//determine new scene index based on game mode and level selected
 
 		//start transition
-		StartCoroutine(CloseMenu(Utils.LevelSceneFromLevel(0)));
+		StartCoroutine(CloseMenu(Utils.LevelSceneFromLevel(LevelSelector.Selected)));
+	}
+
+	public void GoToStore() {
+		Application.OpenURL("market://details?id=com.Silvae.SolarExpress");
+		ActivePopup.gameObject.SetActive(false);
+		ActivePopup = null;
 	}
 
 	IEnumerator CloseMenu(int newSceneIndex) {		
@@ -239,5 +237,10 @@ public class MenuManager : ContextManager {
 	IEnumerator ToLevelSelect() {	
 		yield return CloseHomeScreen();
 		yield return OpenLevelSelect(); 
+	}
+
+	IEnumerator OpenRatingPopup() {
+		yield return new WaitForSeconds(1f);
+		OpenPopup(RatingPopup);
 	}
 }

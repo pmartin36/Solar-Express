@@ -35,9 +35,11 @@ public class OrbiterBullet : Damager {
 	}
 
 
-	public void Init(Colors c, Vector3 direction, Vector3 finalPosition, bool willBeBlocked = false) {
+	public void Init(Colors c, Vector3 direction, Vector3 finalPosition, bool willBeBlocked = false, int damage = 1) {
 		GameColor = c;
 		Movement = direction.normalized * 15f;
+
+		Damage = damage;
 
 		transform.position -= direction.normalized * 0.1f;
 		

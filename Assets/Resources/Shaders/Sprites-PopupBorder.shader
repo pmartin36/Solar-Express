@@ -2,6 +2,8 @@ Shader "Sprites/PopupBorder"
 {
 	Properties
 	{
+		[PerRendererData]_MainTex("Sprite Texture", 2D) = "white" {}
+		_Speed("Rotation Speed", float) = 1
 		_BorderTex("Border Texture", 2D) = "white" {}
 		_Color ("Tint", Color) = (1,1,1,1)
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
@@ -68,14 +70,19 @@ Shader "Sprites/PopupBorder"
 			}
 
 			sampler2D _BorderTex;
+			sampler2D _MainTex;
+			float _Speed;
 
 			fixed4 frag(v2f i) : SV_Target
 			{
 				float2 uvn = i.uv * 2 - 1;
-				float uva = saturate(VectorToAngle(uvn) / 360.0) + _Time.x;
+				float uva = saturate(VectorToAngle(uvn) / 360.0) + _Time.x * _Speed;
 
 				float4 c = tex2D(_BorderTex, float2(uva, 1)) * i.color;
 				c.rgb *= 0.75;
+
+				float4 d = tex2D(_MainTex, i.uv);
+				c.a *= d.a;
 
 				return c;
 			}

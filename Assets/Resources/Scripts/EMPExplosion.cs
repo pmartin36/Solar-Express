@@ -63,6 +63,9 @@ public class EMPExplosion : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		UpdateExplosion();
+		if(Radius > 0.85f && circleCollider.enabled) {
+			circleCollider.enabled = false;
+		}
 	}
 
 	private void UpdateExplosion() {

@@ -42,7 +42,7 @@ public class TouchController : MonoBehaviour {
 				angleDiff += (touchDownAngle - tangle);				
 
 				float dist = (touchPosition - lastTouchPosition).magnitude;
-				if(dist >= 0.07f || unmovedTime > 0.1f) {
+				if(dist > 0.12f || unmovedTime > 0.08f) {
 					unmovedTime = 0f;
 					lastTouchDistance = (touchPosition - lastTouchPosition).magnitude;
 					lastTouchPosition = touchPosition;
@@ -69,6 +69,7 @@ public class TouchController : MonoBehaviour {
 				lastUpdateRotation = 0f;
 				lastTouchDistance = 0f;
 				unmovedTime = 0f;
+				freeRotationAmount = 0f;
 
 				fp.gameObject.SetActive(false);
 				fp.transform.position = touchPosition;
@@ -90,11 +91,12 @@ public class TouchController : MonoBehaviour {
 	
 	public void HandleTouchup() {
 		if (touchDown) {
-			float ratio = Mathf.Clamp01(1 - Mathf.Abs(Mathf.Abs(lastTouchPosition.x) - Mathf.Abs(lastTouchPosition.y)));
-			float moddedRotation = lastUpdateRotation + 0.01f * lastTouchDistance;// * Mathf.Sign(lastUpdateRotation) * ratio;
+			//float ratio = Mathf.Clamp01(1 - Mathf.Abs(Mathf.Abs(lastTouchPosition.x) - Mathf.Abs(lastTouchPosition.y)));
+			float distFromCenter = lastTouchPosition.magnitude;
+			float moddedRotation = lastUpdateRotation * Mathf.Min(1,4/distFromCenter) + 0.006f * lastTouchDistance;
 			Debug.Log(moddedRotation + " " + lastTouchDistance + " " + lastUpdateRotation);
 			if (Mathf.Abs(moddedRotation) >= 0.015f) {
-				freeRotationAmount = Mathf.Clamp(moddedRotation * 60f, -12, 12);
+				freeRotationAmount = Mathf.Clamp(moddedRotation * 60f, -7, 7);
 			}
 		}
 		touchDown = false;

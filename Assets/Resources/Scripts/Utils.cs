@@ -13,7 +13,7 @@ class Utils {
 	public readonly static int StoryScene = 1;
 
 	public static int LevelSceneFromLevel(int levelNum) {
-		return levelNum+2;
+		return levelNum+1;
 	}
 
 	public static Color GetColorFromGameColor(Colors gameColor) {

@@ -40,12 +40,21 @@ public class Planet : MonoBehaviour {
 			transform.Translate(Velocity * Time.deltaTime);
 		}
 
-		if( Vector2.Distance(StartPosition, transform.position) >= distanceToTravel ) {
+		float dist = Vector2.Distance(StartPosition, transform.position);
+		LevelManager lm = (GameManager.Instance.ContextManager as LevelManager);
+		if ( dist >= distanceToTravel ) {
 			transform.position = EndPosition;
 			
 			if(IsStartingPlanet) {
-				(GameManager.Instance.ContextManager as LevelManager).StartSpawningEnemies();
+				if(!lm.LevelStarted) {
+					lm.StartLevelSpawn();
+				}
 				Destroy(this.gameObject);
+			}
+		}
+		else if( dist > 0.8*distanceToTravel && IsStartingPlanet ) {
+			if (!lm.LevelStarted) {
+				lm.StartLevelSpawn();
 			}
 		}
 	}
