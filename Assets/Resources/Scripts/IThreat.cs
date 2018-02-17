@@ -110,9 +110,11 @@ public class PointBeamParameters: IThreatParams {
 [Serializable]
 public class LevelEnd : IThreatParams {
 	public float SpawnTime { get; set; }
+	public int ExtraPoints { get; set; } // add extra points to end of level to make stars harder to achieve
 
-	public LevelEnd(float spawnTime) {
+	public LevelEnd(float spawnTime, int extraPoints = 0) {
 		SpawnTime = spawnTime;
+		ExtraPoints = extraPoints;
 	}
 }
 

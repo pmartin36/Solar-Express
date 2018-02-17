@@ -183,11 +183,11 @@ public class OrbitingEnemy : MonoBehaviour {
 		transform.localRotation = Quaternion.Euler(0, 0, angle - 90);
 
 		Vector3 initialPosition = transform.position;
-		Movement = Utils.AngleToVector(angle - 90) * MoveSpeed*0.9f;
+		Movement = Utils.AngleToVector(angle - 90) * MoveSpeed*0.75f;
 
 		var psmain = engineParticles.main;
 		psmain.startLifetime = 1.2f;
-		psmain.startRotation = Mathf.Deg2Rad * (angle + 180);
+		psmain.startRotation = Mathf.Deg2Rad * (angle + 270);
 
 		//turn back on engine
 		var em = engineParticles.emission;

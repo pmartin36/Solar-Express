@@ -93,10 +93,10 @@ public class TouchController : MonoBehaviour {
 		if (touchDown) {
 			//float ratio = Mathf.Clamp01(1 - Mathf.Abs(Mathf.Abs(lastTouchPosition.x) - Mathf.Abs(lastTouchPosition.y)));
 			float distFromCenter = lastTouchPosition.magnitude;
-			float moddedRotation = lastUpdateRotation * Mathf.Min(1,4/distFromCenter) + 0.006f * lastTouchDistance;
+			float moddedRotation = lastUpdateRotation * Mathf.Min(1f,5/distFromCenter);// + 0.005f * lastTouchDistance;
 			Debug.Log(moddedRotation + " " + lastTouchDistance + " " + lastUpdateRotation);
 			if (Mathf.Abs(moddedRotation) >= 0.015f) {
-				freeRotationAmount = Mathf.Clamp(moddedRotation * 60f, -7, 7);
+				freeRotationAmount = Mathf.Clamp(moddedRotation * 35f, -7, 7);
 			}
 		}
 		touchDown = false;

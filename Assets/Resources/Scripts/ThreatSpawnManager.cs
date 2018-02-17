@@ -33,6 +33,34 @@ public class ThreatSpawnManager : MonoBehaviour {
 		};
 		*/
 		threats = new List<IThreatParams>() {
+			new OrbitingEnemyParameters(0, Colors.Blue, new Vector3(-7,2), angle: 180),
+			new MeteorParameters(3, Colors.Green, new Vector3(-7,0), 180, 3f),
+
+			new MeteorParameters(9, Colors.Yellow, Utils.AngleToVector(135)*7f, 135, 3.8f),
+			new MeteorParameters(11, Colors.Red, Utils.AngleToVector(45)*7f, 45, 3.8f),
+			new OrbitingEnemyParameters(13, Colors.Yellow, new Vector3(-3,7), angle: 120),
+
+			new OrbitingEnemyParameters(21, Colors.Blue, Utils.AngleToVector(135)*7f, angle: 135),
+			new OrbitingEnemyParameters(21, Colors.Green, Utils.AngleToVector(45)*7f, angle: 45),
+			new MeteorParameters(24, Colors.Red, Utils.AngleToVector(90)*7f, 90, 3.5f),
+
+			new OrbitingEnemyParameters(31, Colors.Red, Utils.AngleToVector(135)*7f, angle: 135),
+			new OrbitingEnemyParameters(31, Colors.Yellow, Utils.AngleToVector(45)*7f, angle: 45),
+			new MeteorParameters(36, Colors.Green, Utils.AngleToVector(70)*7f, 70, 3.5f),
+			new MeteorParameters(36, Colors.Blue, Utils.AngleToVector(160)*7f, 160, 3.5f),
+
+			new OrbitingEnemyParameters(42, Colors.Blue, Utils.AngleToVector(90)*7f, angle: 90),
+			new MeteorParameters(49, Colors.Blue, Utils.AngleToVector(90)*7f, 90, 3f),
+			new OrbitingEnemyParameters(50, Colors.Blue, Utils.AngleToVector(-90)*7f, angle: -90),
+
+			new OrbitingEnemyParameters(58, Colors.Yellow, new Vector3(-7,2), angle: 180),
+			new OrbitingEnemyParameters(60, Colors.Green, new Vector3(2,7), angle: 90),
+			new MeteorParameters(60, Colors.Green, Utils.AngleToVector(30)*7f, 30, 3.8f),
+
+			new OrbitingEnemyParameters(70, Colors.Red, Utils.AngleToVector(45)*7f, angle: 45),
+			new MeteorParameters(73, Colors.Yellow, new Vector3(7, 0.75f), 0, 3.2f),
+			new MeteorParameters(75, Colors.Green, Utils.AngleToVector(45)*7f, 40, 3.2f),
+			new MeteorParameters(77, Colors.Blue, new Vector3(7, 0f), 5, 3.2f),
 
 			new LevelEnd(84)
 		};
@@ -40,7 +68,7 @@ public class ThreatSpawnManager : MonoBehaviour {
 		//comment when going to create level
 		threats = threats.Select( t => {
 			if(t is MeteorParameters) {
-				(t as MeteorParameters).Damage = 0;
+				//(t as MeteorParameters).Damage = 0;
 				(t as MeteorParameters).Velocity *= 0.6f;
 			}
 			return t;
@@ -84,6 +112,8 @@ public class ThreatSpawnManager : MonoBehaviour {
 				PointBeamFactory.Create(t as PointBeamParameters);
 			}
 			else if(t is LevelEnd) {
+				var lm = (GameManager.Instance.ContextManager as LevelManager);
+				lm.TotalAvailablePoints += (t as LevelEnd).ExtraPoints;
 				(GameManager.Instance.ContextManager as LevelManager).BeginEndLevel();
 			}
 

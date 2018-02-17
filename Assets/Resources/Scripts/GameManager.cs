@@ -123,7 +123,8 @@ public class GameManager : Singleton<GameManager> {
 
 	public void UpdateLevelStars(int levelNumber, int stars) {
 		FirstTimePlaying = false;
-		if(levelNumber > PlayerInfo.LevelStars.Count) {
+		levelNumber--;
+		if(levelNumber >= PlayerInfo.LevelStars.Count) {
 			PlayerInfo.LevelStars.Add(stars);
 		}
 		else {
