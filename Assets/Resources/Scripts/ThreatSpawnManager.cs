@@ -33,26 +33,34 @@ public class ThreatSpawnManager : MonoBehaviour {
 		};
 		*/
 		threats = new List<IThreatParams>() {
-			new LaserShipParameters(0, Colors.Blue, 4, 135, 2),
+			new LaserShipParameters(0, Colors.Yellow, 2.5f, 90, 2, 2),
+			new PointBeamParameters(3, Colors.Yellow, 7, Vector3.up * -3),
 
-			new LaserShipParameters(12, Colors.Green, 3, 20, 2, 2),
-			new LaserShipParameters(13, Colors.Green, 4f, -80, 4, 3),
-			new LaserShipParameters(23, Colors.Green, 2.8f, 170, 3, 1.5f),
+			new LaserShipParameters(10, Colors.Red, 3f, 180, 3, 3),
+			new LaserShipParameters(10, Colors.Red, 3f, 0, 2, 5),
+			new PointBeamParameters(15, Colors.Red, 15, Vector3.up * 3),
 
-			new LaserShipParameters(38, Colors.Red, 3, 0, 1, 7),
-			new LaserShipParameters(40, Colors.Green, 4f, 90, 1, 5),
-			new LaserShipParameters(42, Colors.Blue, 3, 180, 1, 3),
-			new LaserShipParameters(44, Colors.Yellow, 4f, -90, 1, 1f),
+			new LaserShipParameters(32, Colors.Green, 4, 90, 3, 3),
+			new PointBeamParameters(39, Colors.Blue, 4, Utils.AngleToVector(75)*3),
+			new PointBeamParameters(42, Colors.Blue, 4, Utils.AngleToVector(165)*3),
+			new PointBeamParameters(46, Colors.Blue, 4, Utils.AngleToVector(-105)*3),
+			new PointBeamParameters(50, Colors.Blue, 4, Utils.AngleToVector(-15)*3),
 
-			new LaserShipParameters(54, Colors.Red, 4.5f, 90, 2, 9f),
-			new LaserShipParameters(60, Colors.Red, 3f, 180, 2, 5.5f),
-			new LaserShipParameters(64, Colors.Red, 2.5f, -90, 2, 3f),
-			new LaserShipParameters(68, Colors.Red, 2f, 0, 2, 0.5f),
+			new LaserShipParameters(58, Colors.Blue, 3, 65, 3, 3),
+			new LaserShipParameters(58, Colors.Red, 3, 25, 3, 4),
+			new PointBeamParameters(62, Colors.Yellow, 12, Utils.AngleToVector(-135)*3),
 
-			new LaserShipParameters(79, Colors.Green, 4, 45, 2, 2),
-			new LaserShipParameters(80, Colors.Yellow, 4, 135, 2, 2),
+			new LaserShipParameters(80, Colors.Blue, 4, 90, 3, 3),
+			new PointBeamParameters(82, Colors.Yellow, 2, Utils.AngleToVector(135)*3),
+			new PointBeamParameters(84, Colors.Red, 2, Utils.AngleToVector(180)*3),
+			new PointBeamParameters(86, Colors.Green, 2, Utils.AngleToVector(-135)*3),
+			new PointBeamParameters(88, Colors.Blue, 2, Utils.AngleToVector(-90)*3),
+			new PointBeamParameters(90, Colors.Yellow, 2, Utils.AngleToVector(-45)*3),
+			new PointBeamParameters(92, Colors.Red, 2, Utils.AngleToVector(0)*3),
+			new PointBeamParameters(94, Colors.Green, 2, Utils.AngleToVector(45)*3),
+			new PointBeamParameters(96, Colors.Blue, 2, Utils.AngleToVector(90)*2.5f),
 
-			new LevelEnd(95, 2000)
+			new LevelEnd(102, -7500)
 		};
 
 		//comment when going to create level

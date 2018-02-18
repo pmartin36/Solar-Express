@@ -26,6 +26,9 @@ public class PointBeam : MonoBehaviour {
 	//private AudioSource audio;
 	float nextPointDing = 0;
 
+	bool Despawning = false;
+	bool BeamDespawned = false;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -120,9 +123,6 @@ public class PointBeam : MonoBehaviour {
 				SetSparkParticleProperties(s, hit.point);
 
 				if (s.GameColor == GameColor) {
-					//add points
-					(GameManager.Instance.ContextManager as LevelManager).PointManager.IncrementPoints((int)(400*Time.deltaTime), "Point Beam", color);
-
 					gettingPoints = true;
 					break;
 				}
@@ -138,67 +138,79 @@ public class PointBeam : MonoBehaviour {
 		}
 
 		var em = plusSignParticleSystem.emission;
-		em.enabled = gettingPoints;
-
-		/*
-		if(gettingPoints && Time.time > nextPointDing) {
-			audio.Play();
-			audio.volume = Random.Range(0.15f, 0.3f);
-			nextPointDing = Time.time + Random.Range(4,6);
+		if(gettingPoints && !Despawning) {
+			em.enabled = true;
+			(GameManager.Instance.ContextManager as LevelManager).PointManager.IncrementPoints((int)(400 * Time.deltaTime), "Point Beam", color);
 		}
-		*/
+		else {
+			em.enabled = false;
+		}
 
-		Mesh m = new Mesh();
-		m.name = "Beam";
-		m.vertices = new Vector3[] {
-			new Vector3(0, -beamHalfWidth, 10f),
-			new Vector3(0, beamHalfWidth, 10f),
-			new Vector3(-dist, -beamHalfWidth, 10f),
-			new Vector3(-dist, beamHalfWidth, 10f),
-		};
-		m.uv = new Vector2[] {
-			new Vector2(1,0),
-			new Vector2(1,1),
-			new Vector2(0,0),
-			new Vector2(0,1),
-		};
-		m.triangles = new int[] {
-			0, 2, 1,
-			1, 2, 3
-		};
-		m.RecalculateNormals();
-		beamMeshFilter.mesh = m;
+		if(!BeamDespawned) {
+			Mesh m = new Mesh();
+			m.name = "Beam";
+			m.vertices = new Vector3[] {
+				new Vector3(0, -beamHalfWidth, 10f),
+				new Vector3(0, beamHalfWidth, 10f),
+				new Vector3(-dist, -beamHalfWidth, 10f),
+				new Vector3(-dist, beamHalfWidth, 10f),
+			};
+			m.uv = new Vector2[] {
+				new Vector2(1,0),
+				new Vector2(1,1),
+				new Vector2(0,0),
+				new Vector2(0,1),
+			};
+			m.triangles = new int[] {
+				0, 2, 1,
+				1, 2, 3
+			};
+			m.RecalculateNormals();
+			beamMeshFilter.mesh = m;
 		
-		var shape = plusSignParticleSystem.shape;	
-		Mesh m2 = new Mesh();
-		m2.vertices = m.vertices.Select( b => new Vector3(b.x*1.1f,b.y*2,b.z) ).ToArray();
-		m2.triangles = m.triangles;
-		m.RecalculateNormals();
-		shape.mesh = m2;
+			var shape = plusSignParticleSystem.shape;	
+			Mesh m2 = new Mesh();
+			m2.vertices = m.vertices.Select( b => new Vector3(b.x*1.1f,b.y*2,b.z) ).ToArray();
+			m2.triangles = m.triangles;
+			m.RecalculateNormals();
+			shape.mesh = m2;
+		}
 
 		currentLifetime += Time.deltaTime;
-		if(currentLifetime >= totalLifetime-2f) {
+		if(currentLifetime >= totalLifetime && !Despawning) {
 			StartCoroutine(Despawn());
 		}
 	}
 
 	IEnumerator Despawn() {
 		float startTime = Time.time;
-		float jTime = 2f;
+		float jTime = 1f;
 
-		Color startExtColor = beamMeshRenderer.material.GetColor("_ExteriorColor");
-		Color startCtColor = beamMeshRenderer.material.GetColor("_CenterColor");
+		float startBeamWidth = BeamWidth;
+		float startBeamDistance = BeamDistance;
 
+		var sparkem = sparksParticleSystem.emission;
+		sparkem.enabled = false;
+
+		var plusem = plusSignParticleSystem.emission;
+		plusem.enabled = false;
+
+		Despawning = true;
+		GetComponent<Animator>().StopPlayback();
+
+		while (Time.time - startTime < jTime + Time.deltaTime) {
+			float ttime = (Time.time - startTime) / jTime;
+			BeamWidth = Mathf.Lerp(startBeamWidth, 0, ttime);
+			BeamDistance = Mathf.Lerp(startBeamDistance, 0, ttime);
+			yield return new WaitForEndOfFrame();
+		}
+
+		BeamDespawned = true;
+		startTime = Time.time;
+		Color endColor = new Color(1,1,1,0);
 		while(Time.time - startTime < jTime + Time.deltaTime) {
 			float ttime = (Time.time - startTime) / jTime;
-			Color extColor = Color.Lerp(startExtColor, Color.clear, ttime);
-			Color ctColor = Color.Lerp(startCtColor, Color.clear, ttime);
-
-			beamMeshRenderer.material.SetColor("_ExteriorColor", extColor);
-			beamMeshRenderer.material.SetColor("_CenterColor", ctColor);
-			spriteRenderer.material.SetColor("_ExteriorColor", extColor);
-			spriteRenderer.material.SetColor("_CenterColor", ctColor);
-
+			spriteRenderer.color = Color.Lerp(Color.white, Color.clear, ttime);
 			yield return new WaitForEndOfFrame();
 		}
 
