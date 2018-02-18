@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>Android:13</UnityBuildTarget>
     <UnityVersion>2017.1.0p4</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -171,6 +169,7 @@
     <Compile Include="Assets\Resources\Scripts\PointManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Popup.cs" />
     <Compile Include="Assets\Resources\Scripts\ProgressBarManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\RateButton.cs" />
     <Compile Include="Assets\Resources\Scripts\ScoreStar.cs" />
     <Compile Include="Assets\Resources\Scripts\Serializer.cs" />
     <Compile Include="Assets\Resources\Scripts\SettingsInGameButton.cs" />
@@ -179,13 +178,13 @@
     <Compile Include="Assets\Resources\Scripts\Singleton.cs" />
     <Compile Include="Assets\Resources\Scripts\SoundInGameButton.cs" />
     <Compile Include="Assets\Resources\Scripts\Spin.cs" />
+    <Compile Include="Assets\Resources\Scripts\SplashScreen.cs" />
     <Compile Include="Assets\Resources\Scripts\StoryCore.cs" />
     <Compile Include="Assets\Resources\Scripts\StoryPanel.cs" />
     <Compile Include="Assets\Resources\Scripts\TestRotateAround.cs" />
     <Compile Include="Assets\Resources\Scripts\TextLight.cs" />
     <Compile Include="Assets\Resources\Scripts\ThreatSpawnManager.cs" />
     <Compile Include="Assets\Resources\Scripts\TouchController.cs" />
-    <Compile Include="Assets\Resources\Scripts\RateButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UpgradeTextButton.cs" />
     <Compile Include="Assets\Resources\Scripts\Utils.cs" />
     <Compile Include="Assets\Resources\Trailer\TrailerLasership.cs" />

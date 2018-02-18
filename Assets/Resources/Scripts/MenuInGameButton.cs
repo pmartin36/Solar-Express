@@ -55,8 +55,9 @@ public class MenuInGameButton : InGameButtons {
 				GameManager.Instance.SwitchLevels(Utils.MenuScene);
 				break;
 			case InGameMenuButtons.NextLevel:
+				// we don't need the +1 because the scene for a level number is added in Utils.LoadSceneFromLevel
 				GameManager gm = GameManager.Instance;
-				gm.SwitchLevels(Utils.LevelSceneFromLevel((gm.ContextManager as LevelManager).LevelNumber+1));
+				gm.SwitchLevels(Utils.LevelSceneFromLevel((gm.ContextManager as LevelManager).LevelNumber));
 				break;
 		}
 	}

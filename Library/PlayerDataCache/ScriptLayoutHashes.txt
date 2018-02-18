@@ -232,3 +232,4 @@ ae3c154cb111dcf099f72d17a26dc91c Assembly-CSharp.dll:.TrailerManager
 4e1c63de97d8346077e579a2ec9a6c45 Assembly-CSharp.dll:.GlowObjectCmd
 ba3a15ccf77d077214c2e515e44a1468 Assembly-CSharp.dll:.LevelSelector
 e8c59418330facc0cd6574e5f20ccc61 Assembly-CSharp.dll:.MenuManager
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.SplashScreen

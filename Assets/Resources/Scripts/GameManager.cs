@@ -59,7 +59,7 @@ public class GameManager : Singleton<GameManager> {
 
 		MusicManager = new GameObject("Music").AddComponent<MusicManager>().Init();
 		DontDestroyOnLoad(MusicManager);
-		MusicManager.SetPlayingSong( Resources.Load<AudioClip>("Music/anttisinstrumentals+sytrusy") );
+		//MusicManager.SetPlayingSong( Resources.Load<AudioClip>("Music/anttisinstrumentals+sytrusy") );
 
 		FirstTimePlaying = PlayerInfo.LevelStars.Count == 0;
 

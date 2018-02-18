@@ -69,7 +69,7 @@ Material:
     - _GlossyReflections: 1
     - _MaxLightRadius: 10
     - _Metallic: 0
-    - _MinLightRadius: 10
+    - _MinLightRadius: 8.117845
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
@@ -81,5 +81,5 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _InnerColor: {r: 0, g: 0, b: 0, a: 1}
+    - _InnerColor: {r: 0.5312608, g: 0.5312608, b: 0.5312608, a: 1}
     - _OuterColor: {r: 0, g: 0, b: 0, a: 1}

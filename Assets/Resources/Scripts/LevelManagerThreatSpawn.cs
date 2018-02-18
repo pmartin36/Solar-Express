@@ -41,6 +41,6 @@ public class LevelManagerThreatSpawn : LevelManager {
 	}
 
 	public int RoundToNearest500(float num) {
-		return (int)(Mathf.Round(num/500f) * 500f);
+		return (int)(Mathf.Ceil(num/500f) * 500f);
 	}
 }
