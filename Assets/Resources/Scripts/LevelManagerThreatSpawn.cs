@@ -34,7 +34,7 @@ public class LevelManagerThreatSpawn : LevelManager {
 	public override void BeginEndLevel() {
 		PointCutoffs = new List<int>() {
 			RoundToNearest500(TotalAvailablePoints*0.4f),
-			RoundToNearest500(TotalAvailablePoints*0.75f),
+			RoundToNearest500(TotalAvailablePoints*0.8f),
 			RoundToNearest500(TotalAvailablePoints*0.9f)
 		};
 		base.BeginEndLevel();

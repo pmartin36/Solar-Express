@@ -33,55 +33,60 @@ public class ThreatSpawnManager : MonoBehaviour {
 		};
 		*/
 		threats = new List<IThreatParams>() {
-			new LaserShipParameters(0, Colors.Yellow, 4f, 90, 3, 3),
-			new EMPParameters(4, Colors.Yellow, new Vector2(1f,1.2f)),
-			new EMPParameters(4, Colors.Yellow, new Vector2(-1f,1.2f)),
+			new OrbitingEnemyParameters(0, Colors.Red, new Vector3(5,2), angle: 0),
+			new EMPParameters(0, Colors.Red, new Vector2(-1f,1f)),
 
-			new EMPParameters(10, Colors.Yellow, new Vector2(1f,1.2f)),
-			new EMPParameters(10, Colors.Yellow, new Vector2(-1f,1.2f)),
+			new EMPParameters(8.5f, Colors.Green, new Vector2(-1.5f,0f)),
+			new OrbitingEnemyParameters(12, Colors.Green, new Vector3(5,2), angle: 0),
 
-			new LaserShipParameters(20, Colors.Blue, 3f, -120, 2, 4),
-			new LaserShipParameters(22, Colors.Blue, 3f, 60, 2, 4),
-			new LaserShipParameters(24, Colors.Red, 4.5f, 45, 2, 6),
+			new EMPParameters(20f, Colors.Yellow, new Vector2(0f,1.5f)),
+			new EMPParameters(20f, Colors.Yellow, new Vector2(0f,-1.5f)),
+			new OrbitingEnemyParameters(22, Colors.Yellow, new Vector3(5,2), angle: 0),
 
-			new EMPParameters(24, Colors.Blue, Utils.AngleToVector(-30)*1.5f),
-			new EMPParameters(24, Colors.Red, Utils.AngleToVector(150)*1.5f),
+			new EMPParameters(32.5f, Colors.Yellow, new Vector2(1f,-1f)),
+			new OrbitingEnemyParameters(34, Colors.Green, new Vector3(0,7), angle: 80),		
+			new MeteorParameters(39, Colors.Yellow, Utils.AngleToVector(45)*7 + Vector3.up * 0.75f, 45, 3.5f),
+			new MeteorParameters(39, Colors.Yellow, Utils.AngleToVector(45)*7, 45, 4f),
+			new MeteorParameters(39, Colors.Yellow, Utils.AngleToVector(45)*7 + Vector3.down * 0.75f, 45, 4.5f),
 
-			new EMPParameters(26, Colors.Red, Utils.AngleToVector(0)*1.5f),
-			new EMPParameters(26, Colors.Blue, Utils.AngleToVector(180)*1.5f),
+			new MeteorParameters(44, Colors.Red, Utils.AngleToVector(50)*7, 50, 4f),
+			new MeteorParameters(44, Colors.Red, Utils.AngleToVector(130)*7, 130, 3.5f),
+			new MeteorParameters(44, Colors.Blue, Utils.AngleToVector(-90)*7, -90, 3.5f),
+			new OrbitingEnemyParameters(47, Colors.Blue, new Vector3(6,-2), angle: -40),
+			new OrbitingEnemyParameters(47, Colors.Green, new Vector3(6,2), angle: 40),
 
-			new LaserShipParameters(48, Colors.Blue, 3f, 30, 2, 2),
-			new LaserShipParameters(50, Colors.Green, 4f, 60, 2, 8),
-			new LaserShipParameters(55, Colors.Yellow, 3.5f, -90, 1, 6),
+			new OrbitingEnemyParameters(56, Colors.Red, Utils.AngleToVector(90)*7, angle: 90),
+			new EMPParameters(56, Colors.Green, new Vector2(1f,1f)),
+			new EMPParameters(59.5f, Colors.Yellow, new Vector2(0.6f,1.4f)),
+			new MeteorParameters(62.5f, Colors.Green, Utils.AngleToVector(-90)*7, -90, 3.5f),
+			new OrbitingEnemyParameters(64.5f, Colors.Red, Utils.AngleToVector(-90)*7, angle: -90),
+			new MeteorParameters(66.5f, Colors.Yellow, Utils.AngleToVector(-90)*7, -90, 4f),
 
-			new EMPParameters(55, Colors.Yellow, Utils.AngleToVector(-115)*1.5f),
-			new EMPParameters(55, Colors.Yellow, Utils.AngleToVector(-75)*1.5f),
+			new EMPParameters(72f, Colors.Blue, new Vector2(1,1f)),
+			new OrbitingEnemyParameters(74, Colors.Red, new Vector3(5,2), angle: 0),
+			new EMPParameters(75.5f, Colors.Blue, new Vector2(1.5f, 0)),
+			new MeteorParameters(82, Colors.Blue, Utils.AngleToVector(90)*7, 90, 5.5f),
 
-			new LaserShipParameters(73, Colors.Blue, 3f, 90, 2, 6),
-
-			new EMPParameters(80, Colors.Blue, Utils.AngleToVector(-165)*1.5f),
-			new EMPParameters(80, Colors.Blue, Utils.AngleToVector(-75)*1.5f),
-			new EMPParameters(80, Colors.Blue, Utils.AngleToVector(105)*1.5f),
-
-			new EMPParameters(82, Colors.Blue, Utils.AngleToVector(0)*1.5f),
-			new EMPParameters(82, Colors.Blue, Utils.AngleToVector(90)*1.5f),
-			new EMPParameters(82, Colors.Blue, Utils.AngleToVector(180)*1.5f),
-
-			new EMPParameters(84, Colors.Blue, Utils.AngleToVector(-15)*1.5f),
-			new EMPParameters(84, Colors.Blue, Utils.AngleToVector(75)*1.5f),
-			new EMPParameters(84, Colors.Blue, Utils.AngleToVector(-105)*1.5f),
-
-			new LevelEnd(95, 1000)
+			new LevelEnd(88,3500)
 		};
 
-		//comment when going to create level
+		float startTime = 70;
 		threats = threats.Select( t => {
 			if(t is MeteorParameters) {
-				//(t as MeteorParameters).Damage = 0;
 				(t as MeteorParameters).Velocity *= 0.6f;
 			}
 			return t;
-		}).ToList();
+		}).
+		// comment when level completed
+		//Select( t => {
+		//	if (t is MeteorParameters) {
+		//		(t as MeteorParameters).Damage = 0;
+		//	}
+		//	t.SpawnTime -= startTime;
+		//	return t;
+		//}).
+		Where( t => t.SpawnTime >= 0)
+		.ToList();
 		
 		//only uncomment when YOU HAVE CHECKED THE LEVEL NUMBER IS NOT EXISTING YET
 		//SaveThreats(levelNumber);
