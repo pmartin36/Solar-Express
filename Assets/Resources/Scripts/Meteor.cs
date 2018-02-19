@@ -88,6 +88,8 @@ public class Meteor : Damager {
 		keys[1] = new GradientColorKey(replacementColor, 0.5f);
 		colorGradient.gradient.colorKeys = keys;
 		col.color = colorGradient;
+
+		points = 2000;
 	}
 
 	protected override void Update() {

@@ -5460,7 +5460,7 @@ MonoBehaviour:
   LevelSuccess: {fileID: 295526289}
   TotalAvailablePoints: 0
   PointCutoffs: 10270000204e0000409c0000
-  levelAudioClip: {fileID: 8300000, guid: 5139db742de185148a5fb59eca1e9d8a, type: 3}
+  levelAudioClip: {fileID: 8300000, guid: 81e7c9cc21e8bba49bd38d30d8e11a77, type: 3}
 --- !u!1 &571147511
 GameObject:
   m_ObjectHideFlags: 0

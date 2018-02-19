@@ -33,34 +33,45 @@ public class ThreatSpawnManager : MonoBehaviour {
 		};
 		*/
 		threats = new List<IThreatParams>() {
-			new LaserShipParameters(0, Colors.Yellow, 2.5f, 90, 2, 2),
-			new PointBeamParameters(3, Colors.Yellow, 7, Vector3.up * -3),
+			new LaserShipParameters(0, Colors.Yellow, 4f, 90, 3, 3),
+			new EMPParameters(4, Colors.Yellow, new Vector2(1f,1.2f)),
+			new EMPParameters(4, Colors.Yellow, new Vector2(-1f,1.2f)),
 
-			new LaserShipParameters(10, Colors.Red, 3f, 180, 3, 3),
-			new LaserShipParameters(10, Colors.Red, 3f, 0, 2, 5),
-			new PointBeamParameters(15, Colors.Red, 15, Vector3.up * 3),
+			new EMPParameters(10, Colors.Yellow, new Vector2(1f,1.2f)),
+			new EMPParameters(10, Colors.Yellow, new Vector2(-1f,1.2f)),
 
-			new LaserShipParameters(32, Colors.Green, 4, 90, 3, 3),
-			new PointBeamParameters(39, Colors.Blue, 4, Utils.AngleToVector(75)*3),
-			new PointBeamParameters(42, Colors.Blue, 4, Utils.AngleToVector(165)*3),
-			new PointBeamParameters(46, Colors.Blue, 4, Utils.AngleToVector(-105)*3),
-			new PointBeamParameters(50, Colors.Blue, 4, Utils.AngleToVector(-15)*3),
+			new LaserShipParameters(20, Colors.Blue, 3f, -120, 2, 4),
+			new LaserShipParameters(22, Colors.Blue, 3f, 60, 2, 4),
+			new LaserShipParameters(24, Colors.Red, 4.5f, 45, 2, 6),
 
-			new LaserShipParameters(58, Colors.Blue, 3, 65, 3, 3),
-			new LaserShipParameters(58, Colors.Red, 3, 25, 3, 4),
-			new PointBeamParameters(62, Colors.Yellow, 12, Utils.AngleToVector(-135)*3),
+			new EMPParameters(24, Colors.Blue, Utils.AngleToVector(-30)*1.5f),
+			new EMPParameters(24, Colors.Red, Utils.AngleToVector(150)*1.5f),
 
-			new LaserShipParameters(80, Colors.Blue, 4, 90, 3, 3),
-			new PointBeamParameters(82, Colors.Yellow, 2, Utils.AngleToVector(135)*3),
-			new PointBeamParameters(84, Colors.Red, 2, Utils.AngleToVector(180)*3),
-			new PointBeamParameters(86, Colors.Green, 2, Utils.AngleToVector(-135)*3),
-			new PointBeamParameters(88, Colors.Blue, 2, Utils.AngleToVector(-90)*3),
-			new PointBeamParameters(90, Colors.Yellow, 2, Utils.AngleToVector(-45)*3),
-			new PointBeamParameters(92, Colors.Red, 2, Utils.AngleToVector(0)*3),
-			new PointBeamParameters(94, Colors.Green, 2, Utils.AngleToVector(45)*3),
-			new PointBeamParameters(96, Colors.Blue, 2, Utils.AngleToVector(90)*2.5f),
+			new EMPParameters(26, Colors.Red, Utils.AngleToVector(0)*1.5f),
+			new EMPParameters(26, Colors.Blue, Utils.AngleToVector(180)*1.5f),
 
-			new LevelEnd(102, -7500)
+			new LaserShipParameters(48, Colors.Blue, 3f, 30, 2, 2),
+			new LaserShipParameters(50, Colors.Green, 4f, 60, 2, 8),
+			new LaserShipParameters(55, Colors.Yellow, 3.5f, -90, 1, 6),
+
+			new EMPParameters(55, Colors.Yellow, Utils.AngleToVector(-115)*1.5f),
+			new EMPParameters(55, Colors.Yellow, Utils.AngleToVector(-75)*1.5f),
+
+			new LaserShipParameters(73, Colors.Blue, 3f, 90, 2, 6),
+
+			new EMPParameters(80, Colors.Blue, Utils.AngleToVector(-165)*1.5f),
+			new EMPParameters(80, Colors.Blue, Utils.AngleToVector(-75)*1.5f),
+			new EMPParameters(80, Colors.Blue, Utils.AngleToVector(105)*1.5f),
+
+			new EMPParameters(82, Colors.Blue, Utils.AngleToVector(0)*1.5f),
+			new EMPParameters(82, Colors.Blue, Utils.AngleToVector(90)*1.5f),
+			new EMPParameters(82, Colors.Blue, Utils.AngleToVector(180)*1.5f),
+
+			new EMPParameters(84, Colors.Blue, Utils.AngleToVector(-15)*1.5f),
+			new EMPParameters(84, Colors.Blue, Utils.AngleToVector(75)*1.5f),
+			new EMPParameters(84, Colors.Blue, Utils.AngleToVector(-105)*1.5f),
+
+			new LevelEnd(95, 1000)
 		};
 
 		//comment when going to create level
