@@ -33,52 +33,44 @@ public class ThreatSpawnManager : MonoBehaviour {
 		};
 		*/
 		threats = new List<IThreatParams>() {
-			new OrbitingEnemyParameters(0, Colors.Red, new Vector3(5,2), angle: 0),
-			new EMPParameters(0, Colors.Red, new Vector2(-1f,1f)),
+			new LaserShipParameters(0, Colors.Red, 3.5f, 135, 3, 3),
+			new PointBeamParameters(3f, Colors.Red, 15, Utils.AngleToVector(-45)*4),
+			new EMPParameters(6f, Colors.Red, new Vector2(0.8f,-1.2f)),
+			new EMPParameters(9f, Colors.Red, new Vector2(1.2f,-0.8f)),
 
-			new EMPParameters(8.5f, Colors.Green, new Vector2(-1.5f,0f)),
-			new OrbitingEnemyParameters(12, Colors.Green, new Vector3(5,2), angle: 0),
+			new LaserShipParameters(20, Colors.Green, 3f, 20, 2, 2),
+			new LaserShipParameters(20, Colors.Green, 3f, 160, 2, 3),
+			new PointBeamParameters(22, Colors.Blue, 4, Utils.AngleToVector(-90)*3),
+			
+			new EMPParameters(26.5f, Colors.Blue, new Vector2(-0.8f,-1.2f)),
+			new EMPParameters(26.5f, Colors.Blue, new Vector2(0.8f,-1.2f)),
+			new EMPParameters(27.5f, Colors.Blue, new Vector2(-1f,1f)),
+			new LaserShipParameters(29, Colors.Blue, 3.5f, 90, 3, 3),
 
-			new EMPParameters(20f, Colors.Yellow, new Vector2(0f,1.5f)),
-			new EMPParameters(20f, Colors.Yellow, new Vector2(0f,-1.5f)),
-			new OrbitingEnemyParameters(22, Colors.Yellow, new Vector3(5,2), angle: 0),
+			new LaserShipParameters(33, Colors.Yellow, 4f, -70, 3, 3),
+			new EMPParameters(35, Colors.Green, new Vector2(1.2f, 0.8f)),
 
-			new EMPParameters(32.5f, Colors.Yellow, new Vector2(1f,-1f)),
-			new OrbitingEnemyParameters(34, Colors.Green, new Vector3(0,7), angle: 80),		
-			new MeteorParameters(39, Colors.Yellow, Utils.AngleToVector(45)*7 + Vector3.up * 0.75f, 45, 3.5f),
-			new MeteorParameters(39, Colors.Yellow, Utils.AngleToVector(45)*7, 45, 4f),
-			new MeteorParameters(39, Colors.Yellow, Utils.AngleToVector(45)*7 + Vector3.down * 0.75f, 45, 4.5f),
+			new LaserShipParameters(37, Colors.Green, 3f, 180, 4, 3),
+			new PointBeamParameters(51, Colors.Yellow, 14, Utils.AngleToVector(-90)*3),
+			new LaserShipParameters(52, Colors.Green, 3f, 0, 4, 2.25f),
 
-			new MeteorParameters(44, Colors.Red, Utils.AngleToVector(50)*7, 50, 4f),
-			new MeteorParameters(44, Colors.Red, Utils.AngleToVector(130)*7, 130, 3.5f),
-			new MeteorParameters(44, Colors.Blue, Utils.AngleToVector(-90)*7, -90, 3.5f),
-			new OrbitingEnemyParameters(47, Colors.Blue, new Vector3(6,-2), angle: -40),
-			new OrbitingEnemyParameters(47, Colors.Green, new Vector3(6,2), angle: 40),
+			new LaserShipParameters(66.5f, Colors.Green, 3f, 160, 1, 2.5f),
+			new EMPParameters(68.25f, Colors.Green, new Vector2(-0.8f, 1.2f)),
+			new EMPParameters(68.5f, Colors.Green, new Vector2(1f, 1f)),
+			new PointBeamParameters(69, Colors.Green, 4, Utils.AngleToVector(-110)*3),
 
-			new OrbitingEnemyParameters(56, Colors.Red, Utils.AngleToVector(90)*7, angle: 90),
-			new EMPParameters(56, Colors.Green, new Vector2(1f,1f)),
-			new EMPParameters(59.5f, Colors.Yellow, new Vector2(0.6f,1.4f)),
-			new MeteorParameters(62.5f, Colors.Green, Utils.AngleToVector(-90)*7, -90, 3.5f),
-			new OrbitingEnemyParameters(64.5f, Colors.Red, Utils.AngleToVector(-90)*7, angle: -90),
-			new MeteorParameters(66.5f, Colors.Yellow, Utils.AngleToVector(-90)*7, -90, 4f),
-
-			new EMPParameters(72f, Colors.Blue, new Vector2(1,1f)),
-			new OrbitingEnemyParameters(74, Colors.Red, new Vector3(5,2), angle: 0),
-			new EMPParameters(75.5f, Colors.Blue, new Vector2(1.5f, 0)),
-			new MeteorParameters(82, Colors.Blue, Utils.AngleToVector(90)*7, 90, 5.5f),
-
-			new LevelEnd(88,3500)
+			new LevelEnd(82)
 		};
 
-		float startTime = 70;
+		float startTime = 53;
 		threats = threats.Select( t => {
 			if(t is MeteorParameters) {
 				(t as MeteorParameters).Velocity *= 0.6f;
 			}
 			return t;
 		}).
-		// comment when level completed
-		//Select( t => {
+		//comment when level completed
+		//Select(t => {
 		//	if (t is MeteorParameters) {
 		//		(t as MeteorParameters).Damage = 0;
 		//	}

@@ -40,7 +40,8 @@ public class PointBeam : MonoBehaviour {
 		transform.position = new Vector2(p.x, p.y);
 		Init(p.GameColor, p.Duration);	
 		
-		(GameManager.Instance.ContextManager as LevelManager).TotalAvailablePoints += (int)(400 * p.Duration);
+		//-1 is to account for spawn time
+		(GameManager.Instance.ContextManager as LevelManager).TotalAvailablePoints += (int)(400 * (p.Duration - 1));
 	}
 
 	public void Init(Colors c, float lifetime) {
