@@ -56,7 +56,8 @@ public class LevelSelector : ScrollRect {
 		singleElementWidth = Elements[0].minWidth;
 		totalWidth = (numTiles+1) * singleElementWidth;
 
-		this.horizontalNormalizedPosition = 1;
+		PlayerInfo pi = GameManager.Instance.PlayerInfo;
+		this.horizontalNormalizedPosition = (float)(pi.LevelSelectIndex) / (float)pi.LevelStars.Count;
 		
 		/*
 		var layoutelements = content.GetComponentsInChildren<LayoutElement>();

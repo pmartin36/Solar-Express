@@ -9,12 +9,14 @@ public class PlayerInfo {
 	public bool SoundOn { get; set; }
 	public List<int> LevelStars { get; set; }
 	public bool HasSeenRatingPlea { get; set; }
+	public int LevelSelectIndex { get; set; }
 
 	public PlayerInfo() {
 		Upgraded = false;
 		SoundOn = true;
 		HasSeenRatingPlea = false;
 		LevelStars = new List<int>();
+		LevelSelectIndex = 0;
 	}
 }
 

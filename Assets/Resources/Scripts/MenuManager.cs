@@ -160,8 +160,9 @@ public class MenuManager : ContextManager {
 	public void CloseMenuStartPlay(GameModes gameMode) {
 		StopCoroutine(CloseHomeScreen());
 
-		//determine new scene index based on game mode and level selected
+		GameManager.Instance.PlayerInfo.LevelSelectIndex = LevelSelector.Selected;
 
+		//determine new scene index based on game mode and level selected
 		//start transition
 		StartCoroutine(CloseMenu(Utils.LevelSceneFromLevel(LevelSelector.Selected)));
 	}
