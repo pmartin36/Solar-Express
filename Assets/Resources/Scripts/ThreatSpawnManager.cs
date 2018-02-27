@@ -28,57 +28,60 @@ public class ThreatSpawnManager : MonoBehaviour {
 			new MeteorParameters(3, Colors.Blue, Utils.AngleToVector(-70)*7, -70, 3.5f),
 			new PointBeamParameters(12, Colors.Green, 10, Vector3.one * 2.5f),
 			new EMPParameters(10, Colors.Yellow, new Vector2(-1.5f,1f)),
-			new OrbitingEnemyParameters(15, Colors.Red, new Vector3(5,-2)),
+			new OrbitingEnemyParameters(0, Colors.Green, Utils.AngleToVector(90)*7, moveSpeed: 1.5f, angle: 75),
 			new LevelEnd(20)
 		};
 		*/
 		threats = new List<IThreatParams>() {
-			new OrbitingEnemyParameters(0, Colors.Green, Utils.AngleToVector(90)*7, moveSpeed: 1.5f, angle: 75),
-			new OrbitingEnemyParameters(0, Colors.Red, Utils.AngleToVector(90)*7, moveSpeed: 1.5f, angle: 105),
-			new PointBeamParameters(1, Colors.Green, 5, Vector3.up * 3f),
+			new LaserShipParameters(0, Colors.Blue, 4f, 90, 4, 6),
+			new EMPParameters(0, Colors.Red, new Vector2(-1.5f,0f)),
+			new OrbitingEnemyParameters(5.5f, Colors.Red, Utils.AngleToVector(170)*7, moveSpeed: 2f, angle: 160),
+			new EMPParameters(10, Colors.Blue, new Vector2(1f,1f)),
+			new OrbitingEnemyParameters(13, Colors.Green, Utils.AngleToVector(-105)*7, moveSpeed: 2f, angle: -90),
 
-			new OrbitingEnemyParameters(9, Colors.Blue, Utils.AngleToVector(-45)*7 + Vector3.up * 1.5f, moveSpeed: 1.5f, angle: -45),
-			new OrbitingEnemyParameters(9, Colors.Yellow, Utils.AngleToVector(45)*7 + Vector3.left * 1.5f, moveSpeed: 1.5f, angle: 45),
-			new OrbitingEnemyParameters(9, Colors.Red, Utils.AngleToVector(135)*7 + Vector3.down * 1.5f, moveSpeed: 1.5f, angle: 135),
+			new OrbitingEnemyParameters(21, Colors.Green, Utils.AngleToVector(180)*7, moveSpeed: 2f, angle: 175),
+			new OrbitingEnemyParameters(22f, Colors.Yellow, Utils.AngleToVector(0)*7, moveSpeed: 2f, angle: -5),
+			new EMPParameters(22, Colors.Red, new Vector2(1.1f, -0.9f)),
 
-			new PointBeamParameters(20, Colors.Red, 2, Vector3.up * 3f),
+			new LaserShipParameters(30, Colors.Red, 3f, 60, 2, 1.5f),
 
-			new PointBeamParameters(23, Colors.Blue, 2, Utils.AngleToVector(135)*3),
-			new PointBeamParameters(23, Colors.Green, 2, Utils.AngleToVector(45)*3),
+			new LaserShipParameters(37, Colors.Red, 3f, 90, 3, 4f),
+			new LaserShipParameters(37, Colors.Green, 3f, 180, 3, 5f),
+			new LaserShipParameters(37, Colors.Blue, 3f, -90, 3, 6f),
+			new LaserShipParameters(37, Colors.Yellow, 3f, 0, 3, 7f),
 
-			new PointBeamParameters(26, Colors.Red, 2, Utils.AngleToVector(180)*3),
-			new PointBeamParameters(26, Colors.Blue, 2, Utils.AngleToVector(0)*3),
+			new EMPParameters(39, Colors.Green, new Vector2(-0.9f, 1.1f)),
+			new EMPParameters(39, Colors.Blue, new Vector2(-1.1f, -0.9f)),
+			new EMPParameters(39, Colors.Yellow, new Vector2(0.9f, -1.1f)),
 
-			new PointBeamParameters(29, Colors.Blue, 2, Utils.AngleToVector(-45)*3),
-			new PointBeamParameters(29, Colors.Green, 2, Utils.AngleToVector(-135)*3),
+			new EMPParameters(47, Colors.Green, new Vector2(-1.1f, -0.9f)),
+			new EMPParameters(47, Colors.Blue, new Vector2(0.9f, -1.1f)),
+			new EMPParameters(47, Colors.Yellow, new Vector2(1.1f, 0.9f)),
 
-			new PointBeamParameters(32, Colors.Red, 2, Vector3.down * 3f),
+			new OrbitingEnemyParameters(60, Colors.Red, Utils.AngleToVector(-30)*7, moveSpeed: 4f, angle: -30),
+			new OrbitingEnemyParameters(64, Colors.Green, Utils.AngleToVector(60)*7, moveSpeed: 4f, angle: 60),
+			new OrbitingEnemyParameters(67, Colors.Blue, Utils.AngleToVector(150)*7, moveSpeed: 4f, angle: 150),
+			new OrbitingEnemyParameters(70, Colors.Yellow, Utils.AngleToVector(-60)*7, moveSpeed: 4f, angle: -60),
 
-			new MeteorParameters(36, Colors.Red, Utils.AngleToVector(90)*7, 90, 6f),
+			new LaserShipParameters(74, Colors.Red, 3f, 90, 1, 11f),
+			new LaserShipParameters(74, Colors.Green, 3f, 180, 1, 11f),
+			new LaserShipParameters(74, Colors.Blue, 3f, -90, 1, 11),
+			new LaserShipParameters(74, Colors.Yellow, 3f, 0, 1, 11),
 
-			new MeteorParameters(39, Colors.Blue, Utils.AngleToVector(135)*7, 135, 6f),
-			new MeteorParameters(39, Colors.Green, Utils.AngleToVector(45)*7, 45, 6f),
+			new EMPParameters(76, Colors.Red, new Vector2(0f, 1.42f)),
 
-			new MeteorParameters(42, Colors.Red, Utils.AngleToVector(180)*7, 180, 6f),
-			new MeteorParameters(42, Colors.Blue, Utils.AngleToVector(0)*7, 0, 6f),
+			new EMPParameters(78, Colors.Green, new Vector2(1f, 1f)),
+			new EMPParameters(78, Colors.Blue, new Vector2(-1f, 1f)),
 
-			new MeteorParameters(45, Colors.Blue, Utils.AngleToVector(-45)*7, -45, 6f),
-			new MeteorParameters(45, Colors.Green, Utils.AngleToVector(-135)*7, -135, 6f),
+			new EMPParameters(80, Colors.Blue, new Vector2(1.42f, 0f)),
+			new EMPParameters(80, Colors.Red, new Vector2(-1.42f, 0f)),
 
-			new MeteorParameters(48, Colors.Red, Utils.AngleToVector(-90)*7, -90, 6f),
+			new EMPParameters(82, Colors.Blue, new Vector2(1f, -1f)),
+			new EMPParameters(82, Colors.Green, new Vector2(-1f, -1f)),
 
-			new OrbitingEnemyParameters(52, Colors.Red, Utils.AngleToVector(135)*7, moveSpeed: 2.5f, angle: 135),
-			new OrbitingEnemyParameters(61, Colors.Blue, Utils.AngleToVector(-45)*7, moveSpeed: 2.5f, angle: -45),
+			new EMPParameters(84, Colors.Red, new Vector2(0f, -1.42f)),
 
-			new MeteorParameters(71, Colors.Red, Utils.AngleToVector(135)*7, 135, 6f),
-			new MeteorParameters(74, Colors.Red, Utils.AngleToVector(180)*7, 180, 6f),
-			new MeteorParameters(77, Colors.Red, Utils.AngleToVector(-135)*7, -135, 6f),
-
-			new MeteorParameters(80, Colors.Blue, Utils.AngleToVector(-45)*7, -45, 6f),
-			new MeteorParameters(83, Colors.Blue, Utils.AngleToVector(0)*7, 0, 6f),
-			new MeteorParameters(86, Colors.Blue, Utils.AngleToVector(45)*7, 45, 6f),
-
-			new LevelEnd(90, 2000)
+			new LevelEnd(92, 4000)
 		};
 
 		float startTime = 0;
