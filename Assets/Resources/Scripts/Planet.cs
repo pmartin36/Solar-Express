@@ -15,6 +15,8 @@ public class Planet : MonoBehaviour {
 	public bool IsStartingPlanet;
 	private SpriteRenderer spriteRenderer, planetOutline;
 
+	public float FinalRingAlpha = 0.5f;
+
 	// Use this for initialization
 	void Start () {
 		StartPosition = transform.position;
@@ -30,8 +32,6 @@ public class Planet : MonoBehaviour {
 		else {
 			spriteRenderer.material.SetFloat("_Cutoff", 0);
 		}
-
-		
 	}
 	
 	// Update is called once per frame
@@ -67,7 +67,7 @@ public class Planet : MonoBehaviour {
 			spriteRenderer.material.SetFloat("_Cutoff", jTime * 2f);
 
 			var planetOutlineColor = planetOutline.color;
-			planetOutlineColor.a = jTime * 0.5f;
+			planetOutlineColor.a = jTime * FinalRingAlpha;
 			planetOutline.color = planetOutlineColor;
 
 			yield return new WaitForEndOfFrame();
