@@ -183,6 +183,7 @@
     <Compile Include="Assets\Resources\Scripts\StoryPanel.cs" />
     <Compile Include="Assets\Resources\Scripts\TestRotateAround.cs" />
     <Compile Include="Assets\Resources\Scripts\TextLight.cs" />
+    <Compile Include="Assets\Resources\Scripts\ThankYouLevelManager.cs" />
     <Compile Include="Assets\Resources\Scripts\ThreatSpawnManager.cs" />
     <Compile Include="Assets\Resources\Scripts\TouchController.cs" />
     <Compile Include="Assets\Resources\Scripts\UpgradeTextButton.cs" />

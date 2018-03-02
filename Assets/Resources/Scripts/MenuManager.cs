@@ -158,6 +158,7 @@ public class MenuManager : ContextManager {
 	}
 
 	public void CloseMenuStartPlay(GameModes gameMode) {
+		LevelSelector.horizontal = false;
 		StopCoroutine(CloseHomeScreen());
 
 		GameManager.Instance.PlayerInfo.LevelSelectIndex = LevelSelector.Selected;
@@ -211,7 +212,7 @@ public class MenuManager : ContextManager {
 			screen.position = Vector3.Lerp(startPosition, endPosition, TransitionPct);		
 
 			//start matching level color
-			Camera.main.backgroundColor = Color.Lerp(Color.black, endColor, TransitionPct);
+			//Camera.main.backgroundColor = Color.Lerp(Color.black, endColor, TransitionPct);
 
 			LevelSelector.SetSelectedRingAlpha(Mathf.Lerp(0, 0.5f, TransitionPct*1.5f));
 			LevelSelector.SetElementsAlpha2(Mathf.Lerp(1, 0, TransitionPct*2));

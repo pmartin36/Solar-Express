@@ -1487,6 +1487,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &78807119
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1824,6 +1825,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &192441099
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2282,6 +2284,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &248722717
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2439,7 +2442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3117,6 +3120,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &333449702
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4536,6 +4540,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &493037422
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5032,6 +5037,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &556585309
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8345,7 +8351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.015686275, g: 0.015686275, b: 0.015686275, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -8492,6 +8498,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &886549338
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8692,6 +8699,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &943662574
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8790,6 +8798,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &975029344
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8854,6 +8863,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &993549392
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9258,6 +9268,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &1029310441
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9458,6 +9469,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &1088923737
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10719,7 +10731,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -13032,7 +13044,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -13641,6 +13653,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &1606495992
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13773,6 +13786,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 0
 --- !u!222 &1618897259
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14126,6 +14140,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &1650078218
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14859,6 +14874,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &1712494018
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15200,6 +15216,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &1764087831
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -16079,6 +16096,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &1917482084
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -16914,7 +16932,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: 59916ac381d47a540bb63167e5654ae3, type: 2}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -16993,6 +17011,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  ModifableRingAlpha: 1
 --- !u!222 &2029458931
 CanvasRenderer:
   m_ObjectHideFlags: 0

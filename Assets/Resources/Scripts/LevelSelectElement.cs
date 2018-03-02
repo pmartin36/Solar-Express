@@ -15,12 +15,21 @@ public class LevelSelectElement : LayoutElement {
 	private Image LevelImage;
 	private Image LevelImageRing;
 
+	[SerializeField]
+	private bool ModifableRingAlpha = true;
+
 	// Use this for initialization
 	protected override void Start () {
 		InitStars();
 		LevelName = GetComponentInChildren<TMP_Text>();
 		LevelImage = GetComponentsInChildren<Image>().First( g => g.tag == "Planet");
 		LevelImageRing = GetComponentsInChildren<Image>().FirstOrDefault(g => g.tag == "PlanetRing");
+		if(LevelImageRing.material.name == "Planet 9") {
+			ModifableRingAlpha = false; // can't get variable to show in inspector??
+			foreach(Image s in stars) {
+				s.color = Color.clear;
+			}
+		}
 	}
 	
 	// Update is called once per frame
@@ -61,15 +70,17 @@ public class LevelSelectElement : LayoutElement {
 		if (!gameObject.activeInHierarchy) return;
 
 		Color c = new Color(1, 1, 1, alpha);
-		foreach (Image s in stars) {
-			s.color = c;
+		if(ModifableRingAlpha) {
+			foreach (Image s in stars) {
+				s.color = c;
+			}
 		}
 
 		LevelName.color = c;
 	}
 
 	public void SetRingAlpha(float v) {
-		if(LevelImageRing == null) return;
+		if(LevelImageRing == null || !ModifableRingAlpha) return;
 
 		Color c = LevelImageRing.color;
 		c.a = v;

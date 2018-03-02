@@ -70,13 +70,13 @@ public class LevelManager : ContextManager {
 		SetMenuState();
 	}
 
-	private void SetMenuState() {
+	protected void SetMenuState() {
 		Menu.SetActive(MenuOpen);
 		GameManager.Instance.MenuParticles.SetActive(MenuOpen);
 		Time.timeScale = MenuOpen ? 0.00001f : 1f;
 	}
 
-	IEnumerator LoadLevel() {
+	protected virtual IEnumerator LoadLevel() {
 		//Image loadingScreen = GameObject.FindGameObjectWithTag("LoadingScreen").GetComponent<Image>();
 		var ps = GameManager.Instance.MenuParticles.GetComponentsInChildren<ParticleSystem>();
 		var ssp = GameObject.FindGameObjectWithTag("Scrolling Star Particle").GetComponent<ParticleSystem>();
@@ -177,7 +177,7 @@ public class LevelManager : ContextManager {
 		LevelSuccess.gameObject.SetActive(true);
 	}
 
-	public void ProcessInputs(InputPackage p) {
+	public virtual void ProcessInputs(InputPackage p) {
 		PlayerShip.Rotate(p);
 	}
 }
